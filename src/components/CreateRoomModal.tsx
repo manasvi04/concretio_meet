@@ -185,7 +185,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-card border border-border shadow-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Plus className="h-5 w-5" />
@@ -234,45 +234,26 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
           )}
         </div>
 
-        <DialogFooter className="flex justify-between">
+        <DialogFooter className="flex justify-end">
           <Button
-            variant="outline"
-            onClick={handleClose}
+            onClick={step === "password" ? validatePassword : createNewRoom}
             disabled={isLoading}
+            className="bg-gradient-primary hover:opacity-90 px-6 py-2"
           >
-            Cancel
-          </Button>
-          
-          <div className="flex gap-2">
-            {step === "roomName" && (
-              <Button
-                variant="ghost"
-                onClick={() => setStep("password")}
-                disabled={isLoading}
-              >
-                Back
-              </Button>
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                {step === "password" ? "Validating..." : "Creating..."}
+              </>
+            ) : (
+              <>
+                {step === "password" ? "Validate" : "Create Room"}
+              </>
             )}
-            
-            <Button
-              onClick={step === "password" ? validatePassword : createNewRoom}
-              disabled={isLoading}
-              className="bg-gradient-primary hover:opacity-90"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {step === "password" ? "Validating..." : "Creating..."}
-                </>
-              ) : (
-                <>
-                  {step === "password" ? "Validate" : "Create Room"}
-                </>
-              )}
-            </Button>
-          </div>
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-};
+}
+;

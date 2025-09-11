@@ -185,7 +185,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md bg-card border border-border shadow-lg">
+      <DialogContent className="sm:max-w-md bg-white dark:bg-neutral-900 text-foreground border border-border shadow-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Plus className="h-5 w-5" />

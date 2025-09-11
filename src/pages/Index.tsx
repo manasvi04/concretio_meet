@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { VideoCall } from "@/components/VideoCall";
 import { Notepad } from "@/components/Notepad";
+import { CreateRoomModal } from "@/components/CreateRoomModal";
 import { useToast } from "@/hooks/use-toast";
 import { verifyRoomExists, createRoomUrl, isValidRoomName } from "@/utils/dailyApi";
 import {
@@ -20,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Phone, AlertTriangle, Loader2 } from "lucide-react";
+import { Phone, AlertTriangle, Loader2, Plus } from "lucide-react";
 import concretioLogo from "@/assets/concretio-logo.png";
 import { MdCode } from "react-icons/md";
 
@@ -39,6 +40,9 @@ const Index = () => {
   // New state for API verification
   const [isVerifyingRoom, setIsVerifyingRoom] = useState(false);
   const [verifiedRoomUrl, setVerifiedRoomUrl] = useState<string>("");
+  
+  // Create Room modal state
+  const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
   
   const { toast } = useToast();
 
@@ -277,6 +281,15 @@ const Index = () => {
               </div>
             )}
             <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setIsCreateRoomModalOpen(true)}
+              className="bg-gradient-primary hover:opacity-90"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Create Room
+            </Button>
+            <Button
               variant={isNotepadOpen ? "default" : "secondary"}
               size="sm"
               onClick={() => setIsNotepadOpen(!isNotepadOpen)}
@@ -357,6 +370,11 @@ const Index = () => {
         </AlertDialogContent>
       </AlertDialog>
 
+      {/* Create Room Modal */}
+      <CreateRoomModal
+        isOpen={isCreateRoomModalOpen}
+        onClose={() => setIsCreateRoomModalOpen(false)}
+      />
 
     </div>
   );

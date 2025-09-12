@@ -211,7 +211,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={handleKeyDown}
                 disabled={isLoading}
-                className="w-full text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
+                className="w-full rounded-xl bg-neutral-900 text-white placeholder:text-neutral-400 dark:bg-neutral-800 dark:text-white dark:placeholder:text-neutral-500 border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500"
               />
             </div>
           ) : (
@@ -225,7 +225,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                 onChange={(e) => setRoomName(e.target.value)}
                 onKeyDown={handleKeyDown}
                 disabled={isLoading}
-                className="w-full text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
+                className="w-full rounded-xl bg-neutral-900 text-white placeholder:text-neutral-400 dark:bg-neutral-800 dark:text-white dark:placeholder:text-neutral-500 border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500"
               />
               <p className="text-xs text-neutral-600 dark:text-neutral-400">
                 Only letters, numbers, hyphens, and underscores are allowed.

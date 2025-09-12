@@ -23,6 +23,8 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
   const [step, setStep] = useState<"password" | "roomName">("password");
   const [password, setPassword] = useState("");
   const [roomName, setRoomName] = useState("");
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -30,6 +32,8 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
     setStep("password");
     setPassword("");
     setRoomName("");
+    setDate('');
+    setTime('');
     setIsLoading(false);
     onClose();
   };
@@ -47,7 +51,6 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
     setIsLoading(true);
 
     try {
-      // Get the password from environment variable (Vite)
       const correctPassword = import.meta.env.VITE_CREATE_ROOM_PASSWORD;
 
       if (!correctPassword) {
@@ -60,11 +63,10 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
         return;
       }
 
-      // Validate password
       if (password === correctPassword) {
         setStep("roomName");
         toast({
-          title: "Password Validated ✅",
+          title: "Password Validated ",
           description: "Now enter the room name you want to create.",
         });
       } else {
@@ -86,6 +88,21 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
   };
 
   const createNewRoom = async () => {
+    const istToUnixTimestamp = (dateStr: string, timeStr: string): number | null => {
+      if (!dateStr || !timeStr) return null;
+      const dateTimeString = `${dateStr}T${timeStr}:00`;
+      const dateInIST = new Date(`${dateTimeString}+05:30`);
+      if (isNaN(dateInIST.getTime())) {
+        toast({
+          variant: "destructive",
+          title: "Invalid Date/Time",
+          description: "Please enter a valid date and time.",
+        });
+        return null;
+      }
+      return Math.floor(dateInIST.getTime() / 1000);
+    };
+
     if (!roomName.trim()) {
       toast({
         variant: "destructive",
@@ -95,7 +112,6 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
       return;
     }
 
-    // Validate room name format
     const roomNameRegex = /^[a-zA-Z0-9-_]+$/;
     if (!roomNameRegex.test(roomName)) {
       toast({
@@ -109,20 +125,23 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
     setIsLoading(true);
 
     try {
-      // Check if room already exists
       const verification = await verifyRoomExists(roomName);
-      
       if (verification.exists) {
         toast({
           variant: "destructive",
-          title: "Room Already Exists ⚠️",
+          title: "Room Already Exists ",
           description: `Room name "${roomName}" already exists. Please use a different room name.`,
         });
         setIsLoading(false);
         return;
       }
 
-      // Create the room
+      const nbfTimestamp = istToUnixTimestamp(date, time);
+      if (date && time && nbfTimestamp === null) {
+        setIsLoading(false);
+        return;
+      }
+
       const result = await createRoom(roomName, {
         privacy: 'public',
         properties: {
@@ -135,16 +154,15 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
           enable_video_processing_ui: false,
           enable_live_captions_ui: false,
           enable_network_ui: true,
-          nbf: 1756187700
+          ...(nbfTimestamp && { nbf: nbfTimestamp }),
         }
       });
+
       if (result.success && result.roomInfo) {
         toast({
-          title: "Room Created Successfully! 🎉",
-          description: `Room "${result.roomInfo.name}" has been created. You can now use it for meetings.`,
+          title: "Room Created Successfully! ",
+          description: `Room "${result.roomInfo.name}" has been created.`,
         });
-        
-        // Copy room URL to clipboard
         if (navigator.clipboard) {
           try {
             await navigator.clipboard.writeText(result.roomInfo.url);
@@ -156,7 +174,6 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
             console.warn("Failed to copy to clipboard:", clipboardError);
           }
         }
-        
         handleClose();
       } else {
         toast({
@@ -189,24 +206,24 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 border border-border shadow-xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+      <DialogContent className="sm:max-w-md bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 border-border shadow-xl">
+        <DialogHeader className="text-left">
+          <DialogTitle className="flex items-center gap-2 text-xl font-bold">
             <Plus className="h-5 w-5" />
             Create New Room
           </DialogTitle>
-          <DialogDescription className="text-neutral-700 dark:text-neutral-300">
-            {step === "password" 
+          <DialogDescription className="text-neutral-600 dark:text-neutral-400">
+            {step === "password"
               ? "Enter the admin password to create a new room."
-              : "Enter a unique name for your new room."
+              : "Enter details for your new room."
             }
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="py-4">
           {step === "password" ? (
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-neutral-800 dark:text-neutral-200">Admin Password</Label>
+            <div className="space-y-2 px-1">
+              <Label htmlFor="password">Admin Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -215,43 +232,68 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={handleKeyDown}
                 disabled={isLoading}
-                className="w-full rounded-xl bg-neutral-900 text-white placeholder:text-neutral-400 dark:bg-neutral-800 dark:text-white dark:placeholder:text-neutral-500 border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500"
+                className="w-full rounded-md bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500"
               />
             </div>
           ) : (
-            <div className="space-y-2">
-              <Label htmlFor="roomName" className="text-neutral-800 dark:text-neutral-200">Room Name</Label>
-              <Input
-                id="roomName"
-                type="text"
-                placeholder="e.g., my-meeting-room"
-                value={roomName}
-                onChange={(e) => setRoomName(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={isLoading}
-                className="w-full rounded-xl bg-neutral-900 text-white placeholder:text-neutral-400 dark:bg-neutral-800 dark:text-white dark:placeholder:text-neutral-500 border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500"
-              />
-              <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                Only letters, numbers, hyphens, and underscores are allowed.
+            <div className="grid gap-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="roomName" className="text-right">Name</Label>
+                <Input
+                  id="roomName"
+                  placeholder="e.g., my-meeting-room"
+                  value={roomName}
+                  onChange={(e) => setRoomName(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  disabled={isLoading}
+                  className="col-span-3 w-full rounded-md bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="date" className="text-right">Date</Label>
+                <Input
+                  id="date"
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  disabled={isLoading}
+                  className="col-span-3 w-full rounded-md bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="time" className="text-right">Time</Label>
+                <Input
+                  id="time"
+                  type="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  disabled={isLoading}
+                  className="col-span-3 w-full rounded-md bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500"
+                />
+              </div>
+              <p className="col-span-4 text-xs text-center text-neutral-500 dark:text-neutral-400 pt-2">
+                Schedule a room for a future time (optional, in IST).
               </p>
             </div>
           )}
         </div>
 
-        <DialogFooter className="flex justify-end">
+        <DialogFooter>
           <Button
             onClick={step === "password" ? validatePassword : createNewRoom}
             disabled={isLoading}
-            className="bg-gradient-primary hover:opacity-90 px-6 py-2 text-white"
+            className="w-full bg-emerald-600 hover:bg-emerald-700 px-6 py-2 text-white font-semibold rounded-lg shadow-md transition-all duration-200 disabled:opacity-50"
           >
             {isLoading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                {step === "password" ? "Validating..." : "Creating..."}
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                {step === "password" ? "Validating..." : "Creating Room..."}
               </>
             ) : (
               <>
-                {step === "password" ? "Validate" : "Create Room"}
+                {step === "password" ? "Validate Password" : "Create Room"}
               </>
             )}
           </Button>
@@ -259,5 +301,4 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
       </DialogContent>
     </Dialog>
   );
-}
-;
+};

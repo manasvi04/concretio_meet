@@ -248,7 +248,7 @@ const Index = () => {
                   ) : (
                     <>
                       <Phone className="w-4 h-4 mr-2"/>
-                      Join Call
+                      Join Room
                     </>
                   )}
                 </Button>

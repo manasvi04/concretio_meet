@@ -12,12 +12,10 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
     <div className="min-h-screen bg-gradient-dark flex flex-col">
       {/* Header */}
       <header className="bg-card/50 backdrop-blur-sm border-b border-border px-6 py-4">
-        <div className="flex items-center justify-center">
-          <div className="flex items-center space-x-3">
+        <div className="container mx-auto">
+          <div className="flex items-center gap-3">
             <img src={concretioLogo} alt="Concret.io" className="h-8" />
-            <h1 className="text-xl font-bold text-foreground">
-              Concretio Meet
-            </h1>
+            <h1 className="text-xl font-bold text-foreground">CANDIDLY</h1>
           </div>
         </div>
       </header>
@@ -30,7 +28,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
               Welcome to{" "}
               <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-                Concretio Meet
+                CANDIDLY
               </span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
@@ -114,8 +112,8 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
       <footer className="bg-card/30 backdrop-blur-sm border-t border-border px-6 py-4">
         <div className="text-center">
           <p className="text-muted-foreground text-sm">
-            <span className="font-semibold text-foreground">Concretio Meet</span> is powered by{" "}
-            <span className="text-primary font-semibold">Concretio</span>
+            <span className="font-semibold text-foreground">CANDIDLY</span> is powered by{" "}
+            <span className="text-primary font-semibold">Concret.io</span>
           </p>
         </div>
       </footer>

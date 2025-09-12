@@ -157,6 +157,13 @@ const Index = () => {
     }
   }, [isJoined]);
 
+  // Ensure notepad is only available when actually in a joined call
+  useEffect(() => {
+    if (!isJoined && isNotepadOpen) {
+      setIsNotepadOpen(false);
+    }
+  }, [isJoined, isNotepadOpen]);
+
   if (appState === "welcome") {
     return (
       <>
@@ -214,14 +221,16 @@ const Index = () => {
                 </span>
               </div>
             )}
-            <Button
-              variant={isNotepadOpen ? "default" : "secondary"}
-              size="sm"
-              onClick={() => setIsNotepadOpen(!isNotepadOpen)}
-            >
-              <MdCode size={20} color="#fbfbfeff" />
-              Code
-            </Button>
+            {isJoined && (
+              <Button
+                variant={isNotepadOpen ? "default" : "secondary"}
+                size="sm"
+                onClick={() => setIsNotepadOpen(!isNotepadOpen)}
+              >
+                <MdCode size={20} color="#fbfbfeff" />
+                Code
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -245,10 +254,10 @@ const Index = () => {
           </ResizablePanel>
 
           {/* Handle */}
-          {isNotepadOpen && <ResizableHandle withHandle />}
+          {isJoined && isNotepadOpen && <ResizableHandle withHandle />}
 
           {/* Notepad Panel */}
-          {isNotepadOpen && (
+          {isJoined && isNotepadOpen && (
             <ResizablePanel defaultSize={30} minSize={20} maxSize={60}>
               <div className="h-full w-full">
                 <Notepad
@@ -266,7 +275,7 @@ const Index = () => {
         <div className="text-center">
           <p className="text-muted-foreground text-sm">
             <span className="font-semibold text-foreground">Concretio Meet</span> is powered by{" "}
-            <span className="text-primary font-semibold">Concretio</span>
+            <span className="text-primary font-semibold">Concret.io</span>
           </p>
         </div>
       </footer>

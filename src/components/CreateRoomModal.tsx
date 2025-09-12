@@ -207,14 +207,14 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg bg-card border-border shadow-2xl rounded-2xl">
-        <DialogHeader className="text-center pb-6">
-          <DialogTitle className="flex items-center justify-center gap-3 text-2xl font-bold text-foreground">
+        <DialogHeader className="pb-4">
+          <DialogTitle className="flex items-center gap-3 text-2xl font-bold text-foreground">
             <div className="p-2 bg-gradient-primary rounded-full">
               <Plus className="h-6 w-6 text-white" />
             </div>
             Create New Room
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground text-base mt-2">
+          <DialogDescription className="text-muted-foreground text-base mt-2 text-left">
             {step === "password"
               ? "Enter the admin password to create a new room."
               : "Enter details for your new room."
@@ -237,7 +237,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={handleKeyDown}
                   disabled={isLoading}
-                  className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
+                  className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200 pl-4 pr-4 placeholder:text-muted-foreground"
                 />
               </div>
             </div>
@@ -255,7 +255,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                   onChange={(e) => setRoomName(e.target.value)}
                   onKeyDown={handleKeyDown}
                   disabled={isLoading}
-                  className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
+                  className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200 pl-4 pr-4 placeholder:text-muted-foreground"
                 />
                 <p className="text-xs text-muted-foreground">
                   Only letters, numbers, hyphens, and underscores are allowed.
@@ -279,7 +279,8 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                       onChange={(e) => setDate(e.target.value)}
                       onKeyDown={handleKeyDown}
                       disabled={isLoading}
-                      className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
+                      className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200 pl-4 pr-4 text-foreground [color-scheme:dark]"
+                      placeholder="dd-mm-yyyy"
                     />
                   </div>
                   <div className="space-y-2">
@@ -293,7 +294,8 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                       onChange={(e) => setTime(e.target.value)}
                       onKeyDown={handleKeyDown}
                       disabled={isLoading}
-                      className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
+                      className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200 pl-4 pr-4 text-foreground [color-scheme:dark]"
+                      placeholder="--:--"
                     />
                   </div>
                 </div>

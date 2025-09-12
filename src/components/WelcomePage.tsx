@@ -32,8 +32,8 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
               </span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Experience seamless video conferencing with integrated code collaboration. 
-              Connect, communicate, and code together in real-time.
+              Run structured, high‑signal interviews. Create interview rooms in seconds, 
+              invite candidates and interviewers, and collaborate live with integrated coding.
             </p>
           </div>
 
@@ -43,24 +43,24 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
                 <Video className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">HD Video Calls</h3>
-              <p className="text-muted-foreground text-sm">Crystal clear video and audio quality for professional meetings</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Interview‑Ready Rooms</h3>
+              <p className="text-muted-foreground text-sm">Share secure links and start on time with reliable audio/video</p>
             </div>
             
             <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
                 <Shield className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">Secure & Private</h3>
-              <p className="text-muted-foreground text-sm">End-to-end encryption ensures your conversations stay private</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Fair & Secure</h3>
+              <p className="text-muted-foreground text-sm">Privacy‑first experience that keeps candidates comfortable</p>
             </div>
             
             <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
                 <Zap className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">Code Together</h3>
-              <p className="text-muted-foreground text-sm">Built-in code editor for real-time collaboration and pair programming</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Live Coding</h3>
+              <p className="text-muted-foreground text-sm">Evaluate problem‑solving with a built‑in coding workspace</p>
             </div>
           </div>
 
@@ -85,26 +85,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
               Create Room
             </Button>
           </div>
-
-          {/* Quick Stats */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary mb-1">99.9%</div>
-              <div className="text-sm text-muted-foreground">Uptime</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary mb-1">&lt;100ms</div>
-              <div className="text-sm text-muted-foreground">Latency</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary mb-1">4K</div>
-              <div className="text-sm text-muted-foreground">Video Quality</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary mb-1">24/7</div>
-              <div className="text-sm text-muted-foreground">Support</div>
-            </div>
-          </div>
+          {/* Removed Quick Stats to keep the hero focused on interviews */}
         </div>
       </main>
 

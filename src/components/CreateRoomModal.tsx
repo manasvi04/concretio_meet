@@ -226,9 +226,9 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
           {step === "password" ? (
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-foreground">
+                {/* <Label htmlFor="password" className="text-sm font-medium text-foreground">
                   Admin Password
-                </Label>
+                </Label> */}
                 <Input
                   id="password"
                   type="password"
@@ -320,7 +320,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
               </>
             ) : (
               <>
-                {step === "password" ? "🔐 Validate Password" : "🚀 Create Room"}
+                {step === "password" ? "Validate Password " : "Create Room"}
               </>
             )}
           </Button>

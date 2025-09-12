@@ -126,7 +126,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg bg-card border-border shadow-2xl rounded-2xl">
         <DialogHeader className="text-center pb-6">
-          <DialogTitle className="flex items-center justify-center gap-2 text-2xl font-bold text-foreground">
+          <DialogTitle className="flex gap-2 text-2xl font-bold text-foreground">
             <div className="p-2 bg-gradient-primary rounded-full">
               <Users className="h-6 w-6 text-white" />
             </div>
@@ -144,9 +144,9 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
           {step === "roomInput" ? (
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="roomUrl" className="text-sm font-medium text-foreground">
+                {/* <Label htmlFor="roomUrl" className="text-sm font-medium text-foreground">
                   Room Name or URL
-                </Label>
+                </Label> */}
                 <Input
                   id="roomUrl"
                   placeholder="Enter room name or URL..."

@@ -133,7 +133,8 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
           enable_recording: 'cloud',
           enable_advanced_chat: false,
           enable_video_processing_ui: false,
-          enable_live_captions_ui: false
+          enable_live_captions_ui: false,
+          enable_network_ui: true
         }
       });
 

@@ -66,8 +66,8 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
       if (password === correctPassword) {
         setStep("roomName");
         toast({
-          title: "Password Validated ",
-          description: "Now enter the room name you want to create.",
+          title: "🎉 Access Granted!",
+          description: "Password validated successfully. Now create your room.",
         });
       } else {
         toast({
@@ -160,15 +160,15 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
 
       if (result.success && result.roomInfo) {
         toast({
-          title: "Room Created Successfully! ",
-          description: `Room "${result.roomInfo.name}" has been created.`,
+          title: "🎉 Room Created Successfully!",
+          description: `Room "${result.roomInfo.name}" is ready for your meetings.`,
         });
         if (navigator.clipboard) {
           try {
             await navigator.clipboard.writeText(result.roomInfo.url);
             toast({
-              title: "Room URL Copied",
-              description: "The room URL has been copied to your clipboard.",
+              title: "📋 Room URL Copied!",
+              description: "The room URL has been copied to your clipboard. Share it with participants!",
             });
           } catch (clipboardError) {
             console.warn("Failed to copy to clipboard:", clipboardError);
@@ -206,13 +206,15 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 border-border shadow-xl">
-        <DialogHeader className="text-left">
-          <DialogTitle className="flex items-center gap-2 text-xl font-bold">
-            <Plus className="h-5 w-5" />
+      <DialogContent className="sm:max-w-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 border-0 shadow-2xl rounded-2xl">
+        <DialogHeader className="text-center pb-6">
+          <DialogTitle className="flex items-center justify-center gap-3 text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+            <div className="p-2 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full">
+              <Plus className="h-6 w-6 text-white" />
+            </div>
             Create New Room
           </DialogTitle>
-          <DialogDescription className="text-neutral-600 dark:text-neutral-400">
+          <DialogDescription className="text-neutral-600 dark:text-neutral-400 text-base mt-2">
             {step === "password"
               ? "Enter the admin password to create a new room."
               : "Enter details for your new room."
@@ -220,25 +222,32 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="py-4">
+        <div className="px-6 pb-6">
           {step === "password" ? (
-            <div className="space-y-2 px-1">
-              <Label htmlFor="password">Admin Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter admin password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={isLoading}
-                className="w-full rounded-md bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500"
-              />
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                  Admin Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter admin password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  disabled={isLoading}
+                  className="h-12 text-base rounded-xl bg-neutral-50 dark:bg-neutral-800 border-2 border-neutral-200 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 transition-all duration-200"
+                />
+              </div>
             </div>
           ) : (
-            <div className="grid gap-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="roomName" className="text-right">Name</Label>
+            <div className="space-y-6">
+              {/* Room Name Row */}
+              <div className="space-y-2">
+                <Label htmlFor="roomName" className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                  Room Name
+                </Label>
                 <Input
                   id="roomName"
                   placeholder="e.g., my-meeting-room"
@@ -246,54 +255,70 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                   onChange={(e) => setRoomName(e.target.value)}
                   onKeyDown={handleKeyDown}
                   disabled={isLoading}
-                  className="col-span-3 w-full rounded-md bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  className="h-12 text-base rounded-xl bg-neutral-50 dark:bg-neutral-800 border-2 border-neutral-200 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 transition-all duration-200"
                 />
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                  Only letters, numbers, hyphens, and underscores are allowed.
+                </p>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="date" className="text-right">Date</Label>
-                <Input
-                  id="date"
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  disabled={isLoading}
-                  className="col-span-3 w-full rounded-md bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500"
-                />
+
+              {/* Date and Time Row */}
+              <div className="space-y-3">
+                <Label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                  Schedule (Optional)
+                </Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="date" className="text-xs text-neutral-600 dark:text-neutral-400">
+                      Date (IST)
+                    </Label>
+                    <Input
+                      id="date"
+                      type="date"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      disabled={isLoading}
+                      className="h-12 text-base rounded-xl bg-neutral-50 dark:bg-neutral-800 border-2 border-neutral-200 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 transition-all duration-200"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="time" className="text-xs text-neutral-600 dark:text-neutral-400">
+                      Time (IST)
+                    </Label>
+                    <Input
+                      id="time"
+                      type="time"
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      disabled={isLoading}
+                      className="h-12 text-base rounded-xl bg-neutral-50 dark:bg-neutral-800 border-2 border-neutral-200 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 transition-all duration-200"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-center text-neutral-500 dark:text-neutral-400 bg-neutral-50 dark:bg-neutral-800 rounded-lg p-3">
+                  💡 Leave empty to create an immediate room, or set a future date/time for scheduled access.
+                </p>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="time" className="text-right">Time</Label>
-                <Input
-                  id="time"
-                  type="time"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  disabled={isLoading}
-                  className="col-span-3 w-full rounded-md bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500"
-                />
-              </div>
-              <p className="col-span-4 text-xs text-center text-neutral-500 dark:text-neutral-400 pt-2">
-                Schedule a room for a future time (optional, in IST).
-              </p>
             </div>
           )}
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="px-6 pb-6">
           <Button
             onClick={step === "password" ? validatePassword : createNewRoom}
             disabled={isLoading}
-            className="w-full bg-emerald-600 hover:bg-emerald-700 px-6 py-2 text-white font-semibold rounded-lg shadow-md transition-all duration-200 disabled:opacity-50"
+            className="w-full h-12 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none"
           >
             {isLoading ? (
               <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                <Loader2 className="w-5 h-5 mr-3 animate-spin" />
                 {step === "password" ? "Validating..." : "Creating Room..."}
               </>
             ) : (
               <>
-                {step === "password" ? "Validate Password" : "Create Room"}
+                {step === "password" ? "🔐 Validate Password" : "🚀 Create Room"}
               </>
             )}
           </Button>

@@ -172,6 +172,8 @@ export async function createRoom(roomName: string, options?: {
     enable_knocking?: boolean;
     enable_screenshare?: boolean;
     enable_recording?: boolean;
+    enable_background_effect?: boolean;
+    enable_live_caption_ui?: boolean;
   };
 }): Promise<{
   success: boolean;

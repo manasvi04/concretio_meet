@@ -186,6 +186,13 @@ const Index = () => {
     };
   }, [isJoined, roomUrl, isNotepadOpen]);
 
+  // Close Create Room modal automatically once the call is joined
+  useEffect(() => {
+    if (isJoined && isCreateRoomModalOpen) {
+      setIsCreateRoomModalOpen(false);
+    }
+  }, [isJoined, isCreateRoomModalOpen]);
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-dark">
       {/* Header */}
@@ -280,15 +287,17 @@ const Index = () => {
                 </span> */}
               </div>
             )}
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setIsCreateRoomModalOpen(true)}
-              className="bg-gradient-primary hover:opacity-90"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Create Room
-            </Button>
+            {!isJoined && (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setIsCreateRoomModalOpen(true)}
+                className="bg-gradient-primary hover:opacity-90"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Create Room
+              </Button>
+            )}
             <Button
               variant={isNotepadOpen ? "default" : "secondary"}
               size="sm"

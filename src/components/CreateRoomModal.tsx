@@ -206,15 +206,15 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 border-0 shadow-2xl rounded-2xl">
+      <DialogContent className="sm:max-w-lg bg-card border-border shadow-2xl rounded-2xl">
         <DialogHeader className="text-center pb-6">
-          <DialogTitle className="flex items-center justify-center gap-3 text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-            <div className="p-2 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full">
+          <DialogTitle className="flex items-center justify-center gap-3 text-2xl font-bold text-foreground">
+            <div className="p-2 bg-gradient-primary rounded-full">
               <Plus className="h-6 w-6 text-white" />
             </div>
             Create New Room
           </DialogTitle>
-          <DialogDescription className="text-neutral-600 dark:text-neutral-400 text-base mt-2">
+          <DialogDescription className="text-muted-foreground text-base mt-2">
             {step === "password"
               ? "Enter the admin password to create a new room."
               : "Enter details for your new room."
@@ -226,7 +226,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
           {step === "password" ? (
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                <Label htmlFor="password" className="text-sm font-medium text-foreground">
                   Admin Password
                 </Label>
                 <Input
@@ -237,7 +237,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={handleKeyDown}
                   disabled={isLoading}
-                  className="h-12 text-base rounded-xl bg-neutral-50 dark:bg-neutral-800 border-2 border-neutral-200 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 transition-all duration-200"
+                  className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
                 />
               </div>
             </div>
@@ -245,7 +245,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
             <div className="space-y-6">
               {/* Room Name Row */}
               <div className="space-y-2">
-                <Label htmlFor="roomName" className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                <Label htmlFor="roomName" className="text-sm font-medium text-foreground">
                   Room Name
                 </Label>
                 <Input
@@ -255,21 +255,21 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                   onChange={(e) => setRoomName(e.target.value)}
                   onKeyDown={handleKeyDown}
                   disabled={isLoading}
-                  className="h-12 text-base rounded-xl bg-neutral-50 dark:bg-neutral-800 border-2 border-neutral-200 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 transition-all duration-200"
+                  className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
                 />
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                <p className="text-xs text-muted-foreground">
                   Only letters, numbers, hyphens, and underscores are allowed.
                 </p>
               </div>
 
               {/* Date and Time Row */}
               <div className="space-y-3">
-                <Label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                <Label className="text-sm font-medium text-foreground">
                   Schedule (Optional)
                 </Label>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="date" className="text-xs text-neutral-600 dark:text-neutral-400">
+                    <Label htmlFor="date" className="text-xs text-muted-foreground">
                       Date (IST)
                     </Label>
                     <Input
@@ -279,11 +279,11 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                       onChange={(e) => setDate(e.target.value)}
                       onKeyDown={handleKeyDown}
                       disabled={isLoading}
-                      className="h-12 text-base rounded-xl bg-neutral-50 dark:bg-neutral-800 border-2 border-neutral-200 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 transition-all duration-200"
+                      className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="time" className="text-xs text-neutral-600 dark:text-neutral-400">
+                    <Label htmlFor="time" className="text-xs text-muted-foreground">
                       Time (IST)
                     </Label>
                     <Input
@@ -293,11 +293,11 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                       onChange={(e) => setTime(e.target.value)}
                       onKeyDown={handleKeyDown}
                       disabled={isLoading}
-                      className="h-12 text-base rounded-xl bg-neutral-50 dark:bg-neutral-800 border-2 border-neutral-200 dark:border-neutral-700 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 transition-all duration-200"
+                      className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
                     />
                   </div>
                 </div>
-                <p className="text-xs text-center text-neutral-500 dark:text-neutral-400 bg-neutral-50 dark:bg-neutral-800 rounded-lg p-3">
+                <p className="text-xs text-center text-muted-foreground bg-muted/50 rounded-lg p-3">
                   💡 Leave empty to create an immediate room, or set a future date/time for scheduled access.
                 </p>
               </div>
@@ -309,7 +309,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
           <Button
             onClick={step === "password" ? validatePassword : createNewRoom}
             disabled={isLoading}
-            className="w-full h-12 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none"
+            className="w-full h-12 bg-gradient-primary hover:opacity-90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none"
           >
             {isLoading ? (
               <>

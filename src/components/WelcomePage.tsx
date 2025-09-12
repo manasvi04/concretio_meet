@@ -93,8 +93,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
       <footer className="bg-card/30 backdrop-blur-sm border-t border-border px-6 py-4">
         <div className="text-center">
           <p className="text-muted-foreground text-sm">
-            <span className="font-semibold text-foreground">CANDIDLY</span> is powered by{" "}
-            <span className="text-primary font-semibold">Concret.io</span>
+            <span className="text-primary font-semibold"> powered by Concret.io</span>
           </p>
         </div>
       </footer>

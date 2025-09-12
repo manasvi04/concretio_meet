@@ -171,9 +171,10 @@ export async function createRoom(roomName: string, options?: {
     enable_chat?: boolean;
     enable_knocking?: boolean;
     enable_screenshare?: boolean;
-    enable_recording?: boolean;
-    enable_background_effect?: boolean;
-    enable_live_caption_ui?: boolean;
+    enable_recording?: 'cloud' | 'local';
+    enable_advanced_chat?: boolean;
+    enable_video_processing_ui?: boolean;
+    enable_live_captions_ui?: boolean;
   };
 }): Promise<{
   success: boolean;

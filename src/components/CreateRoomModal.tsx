@@ -130,9 +130,10 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
           enable_chat: true,
           enable_knocking: false,
           enable_screenshare: true,
-          enable_recording: true,
-          enable_background_effect: false,
-          enable_live_caption_ui: false
+          enable_recording: 'cloud',
+          enable_advanced_chat: false,
+          enable_video_processing_ui: false,
+          enable_live_captions_ui: false
         }
       });
 

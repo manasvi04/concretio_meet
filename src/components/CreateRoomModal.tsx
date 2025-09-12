@@ -185,13 +185,13 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md bg-white dark:bg-neutral-900 text-foreground border border-border shadow-xl">
+      <DialogContent className="sm:max-w-md bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 border border-border shadow-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Plus className="h-5 w-5" />
             Create New Room
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-neutral-700 dark:text-neutral-300">
             {step === "password" 
               ? "Enter the admin password to create a new room."
               : "Enter a unique name for your new room."
@@ -202,7 +202,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
         <div className="space-y-4">
           {step === "password" ? (
             <div className="space-y-2">
-              <Label htmlFor="password">Admin Password</Label>
+              <Label htmlFor="password" className="text-neutral-800 dark:text-neutral-200">Admin Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -211,12 +211,12 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={handleKeyDown}
                 disabled={isLoading}
-                className="w-full"
+                className="w-full text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
               />
             </div>
           ) : (
             <div className="space-y-2">
-              <Label htmlFor="roomName">Room Name</Label>
+              <Label htmlFor="roomName" className="text-neutral-800 dark:text-neutral-200">Room Name</Label>
               <Input
                 id="roomName"
                 type="text"
@@ -225,9 +225,9 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                 onChange={(e) => setRoomName(e.target.value)}
                 onKeyDown={handleKeyDown}
                 disabled={isLoading}
-                className="w-full"
+                className="w-full text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500"
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-neutral-600 dark:text-neutral-400">
                 Only letters, numbers, hyphens, and underscores are allowed.
               </p>
             </div>
@@ -238,7 +238,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
           <Button
             onClick={step === "password" ? validatePassword : createNewRoom}
             disabled={isLoading}
-            className="bg-gradient-primary hover:opacity-90 px-6 py-2"
+            className="bg-gradient-primary hover:opacity-90 px-6 py-2 text-white"
           >
             {isLoading ? (
               <>

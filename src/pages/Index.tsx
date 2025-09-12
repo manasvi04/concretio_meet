@@ -212,7 +212,7 @@ const Index = () => {
                 <div
                   className={`w-2 h-2 rounded-full ${
                     networkStatus.status === "Good"
-                      ? "bg-green-500"
+                      ? "bg-primary"
                       : "bg-red-500"
                   }`}
                 />

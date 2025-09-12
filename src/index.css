@@ -17,7 +17,8 @@ All colors MUST be HSL.
     --popover: 210 11% 7%;
     --popover-foreground: 210 20% 95%;
 
-    --primary: 142 76% 36%;
+    /* Brand primary: #EC8E00 -> hsl(36 100% 46%) */
+    --primary: 36 100% 46%;
     --primary-foreground: 210 20% 98%;
 
     --secondary: 210 11% 12%;
@@ -34,16 +35,16 @@ All colors MUST be HSL.
 
     --border: 210 11% 15%;
     --input: 210 11% 15%;
-    --ring: 142 76% 36%;
+    --ring: 36 100% 46%;
 
     /* Video call specific colors */
     --video-bg: 210 11% 3%;
     --video-controls: 210 11% 10%;
     --notepad-bg: 210 11% 8%;
-    --code-highlight: 142 76% 36%;
+    --code-highlight: 36 100% 46%;
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 45%));
+    --gradient-primary: linear-gradient(135deg, hsl(36 100% 46%), hsl(36 100% 56%));
     --gradient-dark: linear-gradient(180deg, hsl(210 11% 5%), hsl(210 11% 3%));
     
     /* Animations */

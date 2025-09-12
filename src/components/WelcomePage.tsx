@@ -40,7 +40,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
           {/* Features Grid */}
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-3 mx-auto">
                 <Video className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">Interview‑Ready Rooms</h3>
@@ -48,7 +48,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
             </div>
             
             <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-3 mx-auto">
                 <Shield className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">Fair & Secure</h3>
@@ -56,7 +56,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
             </div>
             
             <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 mx-auto">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-3 mx-auto">
                 <Zap className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">Live Coding</h3>
@@ -71,7 +71,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
               size="lg"
               className="w-full sm:w-auto bg-gradient-primary hover:opacity-90 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
             >
-              <Users className="w-5 h-5 mr-3" />
+              <Users className="w-5 h-5 mr-2" />
               Join Room
             </Button>
             
@@ -81,7 +81,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
               size="lg"
               className="w-full sm:w-auto border-primary/30 text-primary hover:bg-primary/10 font-semibold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02]"
             >
-              <Plus className="w-5 h-5 mr-3" />
+              <Plus className="w-5 h-5 mr-2" />
               Create Room
             </Button>
           </div>

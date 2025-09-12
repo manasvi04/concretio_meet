@@ -126,7 +126,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg bg-card border-border shadow-2xl rounded-2xl">
         <DialogHeader className="text-center pb-6">
-          <DialogTitle className="flex items-center justify-center gap-3 text-2xl font-bold text-foreground">
+          <DialogTitle className="flex items-center justify-center gap-2 text-2xl font-bold text-foreground">
             <div className="p-2 bg-gradient-primary rounded-full">
               <Users className="h-6 w-6 text-white" />
             </div>
@@ -154,7 +154,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
                   onChange={(e) => setRoomUrl(e.target.value)}
                   onKeyDown={handleKeyDown}
                   disabled={isVerifying}
-                  className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
+                  className="h-12 text-base rounded-xl bg-input border-2 border-border hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
                 />
                 {roomUrl && !isValidRoomName(roomUrl) && (
                   <p className="text-xs text-destructive">

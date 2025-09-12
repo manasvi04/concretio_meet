@@ -146,7 +146,7 @@ export const Notepad = ({ isOpen, onClose }: NotepadProps) => {
               <span className="ml-2 text-amber-500">• Unsaved changes</span>
             )}
             {isSaved && content !== '// You can write code or take notes here' && (
-              <span className="ml-2 text-green-500">• Saved</span>
+              <span className="ml-2 text-primary">• Saved</span>
             )}
           </div>
           <div className="flex items-center space-x-2">
@@ -157,7 +157,7 @@ export const Notepad = ({ isOpen, onClose }: NotepadProps) => {
               variant={isSaved ? "default" : "secondary"} 
               size="sm" 
               onClick={saveContent}
-              className={isSaved ? "bg-green-600 hover:bg-green-700" : ""}
+              className={isSaved ? "bg-primary hover:opacity-90" : ""}
               title="Save content (Ctrl+S)"
             >
               <Save className="w-4 h-4 mr-1" />

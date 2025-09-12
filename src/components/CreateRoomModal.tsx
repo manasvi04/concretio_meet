@@ -126,7 +126,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
       const result = await createRoom(roomName, {
         privacy: 'public',
         properties: {
-          max_participants: 5,
+          max_participants: 4,
           enable_chat: true,
           enable_knocking: false,
           enable_screenshare: true,
@@ -134,7 +134,8 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
           enable_advanced_chat: false,
           enable_video_processing_ui: false,
           enable_live_captions_ui: false,
-          enable_network_ui: true
+          enable_network_ui: true,
+          nbf: 1756187700
         }
       });
       if (result.success && result.roomInfo) {

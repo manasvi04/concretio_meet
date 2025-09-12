@@ -137,7 +137,6 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
           enable_network_ui: true
         }
       });
-
       if (result.success && result.roomInfo) {
         toast({
           title: "Room Created Successfully! 🎉",

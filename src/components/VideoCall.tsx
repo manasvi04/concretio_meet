@@ -48,7 +48,8 @@ export const VideoCall = forwardRef<VideoCallRef, VideoCallProps>(
           showLeaveButton: true,
           showFullscreenButton: false,
           showLocalVideo: true,
-          showParticipantsBar: false,
+          // Enable the sidebar (People/Chat/Network tabs) so Network UI can appear when enabled via room properties
+          showParticipantsBar: true,
           theme: {
             colors: {
               accent: "#22c55e",

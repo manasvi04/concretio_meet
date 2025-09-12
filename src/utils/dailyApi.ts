@@ -114,7 +114,8 @@ export async function verifyRoomExists(roomUrlOrName: string): Promise<{
             privacy: roomData.privacy || 'public',
             url: roomData.url || createRoomUrl(roomName),
             created_at: roomData.created_at || new Date().toISOString(),
-            config: roomData.config || {}
+            // Daily returns room configuration under 'properties'
+            config: roomData.properties || {}
           }
         };
       } else if (response.status === 404) {
@@ -211,7 +212,7 @@ export async function createRoom(roomName: string, options?: {
           privacy: roomData.privacy,
           url: roomData.url,
           created_at: roomData.created_at,
-          config: roomData.config || {}
+          config: roomData.properties || roomData.config || {}
         }
       };
     } else {

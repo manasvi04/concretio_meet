@@ -214,7 +214,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
             </div>
             Create New Room
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground text-base mt-2 text-left">
+          <DialogDescription className="text-muted-foreground text-base mt-2 text-left pl-12">
             {step === "password"
               ? "Enter the admin password to create a new room."
               : "Enter details for your new room."
@@ -237,10 +237,10 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={handleKeyDown}
                   disabled={isLoading}
-                  className="h-12 text-base rounded-xl bg-input border-2 border-border hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200 pl-4 pr-4 placeholder:text-muted-foreground"
+                  className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-0 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
                 />
               </div>
-            </div>
+            </div> 
           ) : (
             <div className="space-y-6">
               {/* Room Name Row */}
@@ -255,7 +255,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                   onChange={(e) => setRoomName(e.target.value)}
                   onKeyDown={handleKeyDown}
                   disabled={isLoading}
-                  className="h-12 text-base rounded-xl bg-input border-2 border-border hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200 pl-4 pr-4 placeholder:text-muted-foreground"
+                  className="h-12 text-base rounded-xl bg-input border-2 border-border hover:border-primary/40 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary transition-all duration-200 pl-4 pr-4 placeholder:text-muted-foreground"
                 />
                 <p className="text-xs text-muted-foreground">
                   Only letters, numbers, hyphens, and underscores are allowed.
@@ -279,7 +279,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                       onChange={(e) => setDate(e.target.value)}
                       onKeyDown={handleKeyDown}
                       disabled={isLoading}
-                      className="h-12 text-base rounded-xl bg-input border-2 border-border hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200 pl-4 pr-4 text-foreground [color-scheme:dark]"
+                      className="h-12 text-base rounded-xl bg-input border-2 border-border hover:border-primary/40 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary transition-all duration-200 pl-4 pr-4 text-foreground [color-scheme:dark]"
                       placeholder="dd-mm-yyyy"
                     />
                   </div>
@@ -294,7 +294,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                       onChange={(e) => setTime(e.target.value)}
                       onKeyDown={handleKeyDown}
                       disabled={isLoading}
-                      className="h-12 text-base rounded-xl bg-input border-2 border-border hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200 pl-4 pr-4 text-foreground [color-scheme:dark]"
+                      className="h-12 text-base rounded-xl bg-input border-2 border-border hover:border-primary/40 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary transition-all duration-200 pl-4 pr-4 text-foreground [color-scheme:dark]"
                       placeholder="--:--"
                     />
                   </div>

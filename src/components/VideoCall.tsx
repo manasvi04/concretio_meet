@@ -52,7 +52,7 @@ export const VideoCall = forwardRef<VideoCallRef, VideoCallProps>(
           showParticipantsBar: true,
           theme: {
             colors: {
-              accent: "#22c55e",
+              accent: "#EC8E00",
               accentText: "#ffffff",
               background: "#0a0a0f",
               backgroundAccent: "#141419",

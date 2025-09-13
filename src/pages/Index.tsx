@@ -72,7 +72,17 @@ const Index = () => {
   };
 
   const handleLeaveCall = () => {
+    // Trigger Daily to leave; when "left-meeting" fires, onJoinedChange(false) will navigate to Welcome
     videoCallRef.current?.leaveCall();
+  };
+
+  const handleJoinedChange = (joined: boolean) => {
+    setIsJoined(joined);
+    if (!joined) {
+      // Reset state and navigate to Welcome screen
+      setAppState("welcome");
+      setRoomUrl("");
+    }
   };
 
   const handleBackToWelcome = () => {
@@ -244,7 +254,7 @@ const Index = () => {
               <VideoCall
                 ref={videoCallRef}
                 roomUrl={roomUrl}
-                onJoinedChange={setIsJoined}
+                onJoinedChange={handleJoinedChange}
                 isJoined={isJoined}
                 onLeaveCall={handleLeaveCall}
                 onJoinError={handleJoinError}

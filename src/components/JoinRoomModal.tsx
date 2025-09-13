@@ -132,7 +132,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
             </div>
             Join Room
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground text-base mt-2">
+          <DialogDescription className="text-muted-foreground text-base mt-2 pl-12">
             {step === "roomInput"
               ? "Enter the room name or URL to join the meeting."
               : "Please review the instructions before joining the call."
@@ -154,7 +154,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
                   onChange={(e) => setRoomUrl(e.target.value)}
                   onKeyDown={handleKeyDown}
                   disabled={isVerifying}
-                  className="h-12 text-base rounded-xl bg-input border-2 border-border hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
+                  className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-0 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
                 />
                 {roomUrl && !isValidRoomName(roomUrl) && (
                   <p className="text-xs text-destructive">

@@ -213,7 +213,7 @@ const Index = () => {
             </Button>
             <img src={concretioLogo} alt="Concret.io" className="h-8" />
             <h1 className="text-xl font-bold text-foreground">
-              Concretio Meet
+              CANDIDLY
             </h1>
           </div>
 

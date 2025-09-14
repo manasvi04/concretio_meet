@@ -129,6 +129,7 @@ export const Notepad = ({ isOpen, onClose }: NotepadProps) => {
       {/* Content Area */}
       <div className="flex-1 p-4">
         <Textarea
+          id="notepad-textarea"
           value={content}
           onChange={handleContentChange}
           placeholder={mode === 'code' ? 'Write your code here...' : 'Take your notes here...'}
@@ -146,24 +147,25 @@ export const Notepad = ({ isOpen, onClose }: NotepadProps) => {
               <span className="ml-2 text-amber-500">• Unsaved changes</span>
             )}
             {isSaved && content !== '// You can write code or take notes here' && (
-              <span className="ml-2 text-green-500">• Saved</span>
+              <span className="ml-2 text-primary">• Saved</span>
             )}
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="sm" onClick={clearContent}>
+            <Button id="notepad-clear-button" variant="ghost" size="sm" onClick={clearContent}>
               <Trash2 className="w-4 h-4" />
             </Button>
             <Button 
+              id="notepad-save-button"
               variant={isSaved ? "default" : "secondary"} 
               size="sm" 
               onClick={saveContent}
-              className={isSaved ? "bg-green-600 hover:bg-green-700" : ""}
+              className={isSaved ? "bg-primary hover:opacity-90" : ""}
               title="Save content (Ctrl+S)"
             >
               <Save className="w-4 h-4 mr-1" />
               {isSaved ? "Saved" : "Save"}
             </Button>
-            <Button variant="default" size="sm" onClick={downloadContent}>
+            <Button id="notepad-download-button" variant="default" size="sm" onClick={downloadContent}>
               <Download className="w-4 h-4" />
             </Button>
           </div>

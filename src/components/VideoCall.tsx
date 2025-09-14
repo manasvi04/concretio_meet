@@ -6,7 +6,7 @@ import {
   useState,
   forwardRef,
   useImperativeHandle,
-} from "react";
+} from "react"; 
 import DailyIframe from "@daily-co/daily-js";
 import { Button } from "@/components/ui/button";
 import { Mic, MicOff, Video, VideoOff, Phone, Settings } from "lucide-react";
@@ -37,6 +37,10 @@ export const VideoCall = forwardRef<VideoCallRef, VideoCallProps>(
     const [isMuted, setIsMuted] = useState(false);
     const [isVideoOff, setIsVideoOff] = useState(false);
     const [isJoining, setIsJoining] = useState(false);
+    // Track last computed packet loss and apply simple hysteresis to reduce flicker
+    const lastPacketLossRef = useRef<number>(0);
+    const goodCountRef = useRef<number>(0);
+    const badCountRef = useRef<number>(0);
 
     useEffect(() => {
       if (callFrameRef.current) {
@@ -44,10 +48,11 @@ export const VideoCall = forwardRef<VideoCallRef, VideoCallProps>(
           showLeaveButton: true,
           showFullscreenButton: false,
           showLocalVideo: true,
-          showParticipantsBar: false,
+          // Enable the sidebar (People/Chat/Network tabs) so Network UI can appear when enabled via room properties
+          showParticipantsBar: true,
           theme: {
             colors: {
-              accent: "#22c55e",
+              accent: "#EC8E00",
               accentText: "#ffffff",
               background: "#0a0a0f",
               backgroundAccent: "#141419",
@@ -86,6 +91,24 @@ export const VideoCall = forwardRef<VideoCallRef, VideoCallProps>(
           onJoinError?.(error.errorMsg || error.message || "Failed to join the room");
         });
 
+        // Listen to Daily's network quality signal (0-5). Prefer this when available.
+        // Treat 0-2 as Bad, 3 as borderline (use packet loss to decide), 4-5 as Good.
+        frame.on("network-quality-change" as any, (ev: any) => {
+          try {
+            const score = ev?.threshold?.quality ?? ev?.quality ?? ev?.qualityScore;
+            if (typeof score === "number") {
+              let status: "Good" | "Bad" = score >= 4 ? "Good" : score <= 2 ? "Bad" : "Good";
+              // If borderline (score === 3), use last packet loss reading to decide
+              if (score === 3) {
+                status = (lastPacketLossRef.current ?? 0) > 3 ? "Bad" : "Good";
+              }
+              onNetworkStatsChange?.({ status, packetLoss: lastPacketLossRef.current ?? 0 });
+            }
+          } catch (e) {
+            // no-op
+          }
+        });
+
         setCallFrame(frame);
 
         return () => {
@@ -94,7 +117,7 @@ export const VideoCall = forwardRef<VideoCallRef, VideoCallProps>(
       }
     }, []);
 
-    // Monitor network statistics
+    // Monitor network statistics (fallback and to compute packet loss). Includes simple hysteresis.
     useEffect(() => {
       let intervalId: NodeJS.Timeout;
 
@@ -103,46 +126,43 @@ export const VideoCall = forwardRef<VideoCallRef, VideoCallProps>(
           try {
             const stats = await callFrame.getNetworkStats();
             if (stats && stats.stats) {
-              // Extract packet loss from the stats
-              let packetLoss = 0;
-
-              // Check for video receive stats
-              if (stats.stats.video && stats.stats.video.recv) {
-                const videoRecv = stats.stats.video.recv;
+              // Extract packet loss from audio/video recv stats (more reliable for QoE)
+              const s = stats.stats as any;
+              const calcLoss = (recv: any) => {
                 if (
-                  videoRecv.packetsLost !== undefined &&
-                  videoRecv.packetsReceived !== undefined
+                  recv &&
+                  typeof recv.packetsLost === "number" &&
+                  typeof recv.packetsReceived === "number"
                 ) {
-                  const totalPackets =
-                    videoRecv.packetsLost + videoRecv.packetsReceived;
-                  if (totalPackets > 0) {
-                    packetLoss = Math.max(
-                      packetLoss,
-                      (videoRecv.packetsLost / totalPackets) * 100
-                    );
-                  }
+                  const total = recv.packetsLost + recv.packetsReceived;
+                  return total > 0 ? (recv.packetsLost / total) * 100 : 0;
                 }
+                return 0;
+              };
+
+              const videoLoss = s.video ? calcLoss(s.video.recv) : 0;
+              const audioLoss = s.audio ? calcLoss(s.audio.recv) : 0;
+              // Use the worse of audio/video as a simple proxy for user experience
+              const packetLoss = Math.max(videoLoss, audioLoss);
+
+              // Save the latest reading
+              lastPacketLossRef.current = packetLoss;
+
+              // Apply hysteresis: require 2 consecutive intervals to flip state
+              let status: "Good" | "Bad" = "Good";
+              const currentIsGood = packetLoss < 3; // threshold similar to original
+              if (currentIsGood) {
+                goodCountRef.current += 1;
+                badCountRef.current = 0;
+              } else {
+                badCountRef.current += 1;
+                goodCountRef.current = 0;
               }
 
-              // Check for audio receive stats
-              if (stats.stats.audio && stats.stats.audio.recv) {
-                const audioRecv = stats.stats.audio.recv;
-                if (
-                  audioRecv.packetsLost !== undefined &&
-                  audioRecv.packetsReceived !== undefined
-                ) {
-                  const totalPackets =
-                    audioRecv.packetsLost + audioRecv.packetsReceived;
-                  if (totalPackets > 0) {
-                    packetLoss = Math.max(
-                      packetLoss,
-                      (audioRecv.packetsLost / totalPackets) * 100
-                    );
-                  }
-                }
-              }
+              // Only report Bad after 2 consecutive bad reads; Good after 2 consecutive good reads
+              if (badCountRef.current >= 2) status = "Bad";
+              if (goodCountRef.current >= 2) status = "Good";
 
-              const status = packetLoss < 3 ? "Good" : "Bad"; // Consider < 3% as good
               onNetworkStatsChange?.({ status, packetLoss });
             }
           } catch (error) {

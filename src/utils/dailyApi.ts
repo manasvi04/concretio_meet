@@ -114,7 +114,8 @@ export async function verifyRoomExists(roomUrlOrName: string): Promise<{
             privacy: roomData.privacy || 'public',
             url: roomData.url || createRoomUrl(roomName),
             created_at: roomData.created_at || new Date().toISOString(),
-            config: roomData.config || {}
+            // Daily returns room configuration under 'properties'
+            config: roomData.properties || {}
           }
         };
       } else if (response.status === 404) {
@@ -171,7 +172,12 @@ export async function createRoom(roomName: string, options?: {
     enable_chat?: boolean;
     enable_knocking?: boolean;
     enable_screenshare?: boolean;
-    enable_recording?: boolean;
+    enable_recording?: 'cloud' | 'local';
+    enable_advanced_chat?: boolean;
+    enable_video_processing_ui?: boolean;
+    enable_live_captions_ui?: boolean;
+    enable_network_ui?: boolean;
+    nbf?: number;
   };
 }): Promise<{
   success: boolean;
@@ -207,7 +213,7 @@ export async function createRoom(roomName: string, options?: {
           privacy: roomData.privacy,
           url: roomData.url,
           created_at: roomData.created_at,
-          config: roomData.config || {}
+          config: roomData.properties || roomData.config || {}
         }
       };
     } else {

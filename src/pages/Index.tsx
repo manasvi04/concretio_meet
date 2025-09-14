@@ -212,7 +212,10 @@ const Index = () => {
               <ArrowLeft className="w-4 h-4" />
             </Button>
             <img src={concretioLogo} alt="Concret.io" className="h-8" />
-            <h1 className="text-xl font-bold text-foreground">
+            <h1 
+              className="text-xl font-bold text-foreground" 
+              style={{ color: "#EC8E00" }}
+            >
               CANDIDLY
             </h1>
           </div>

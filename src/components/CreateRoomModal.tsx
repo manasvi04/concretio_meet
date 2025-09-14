@@ -279,7 +279,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                       onChange={(e) => setDate(e.target.value)}
                       onKeyDown={handleKeyDown}
                       disabled={isLoading}
-                      className="h-12 text-base rounded-xl bg-input border-2 border-border hover:border-primary/40 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary transition-all duration-200 pl-4 pr-4 text-foreground [color-scheme:dark]"
+                      className="h-12 text-base rounded-xl bg-input border-2 border-border hover:border-primary/40 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary transition-all duration-200 text-foreground [color-scheme:dark]"
                       placeholder="dd-mm-yyyy"
                     />
                   </div>

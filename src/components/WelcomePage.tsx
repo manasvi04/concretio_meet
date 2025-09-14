@@ -15,7 +15,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
         <div className="container mx-auto">
           <div className="flex items-center gap-3">
             <img src={concretioLogo} alt="Concret.io" className="h-8" />
-            <h1 className="text-xl font-bold text-foreground">CANDIDLY</h1>
+            <h1 className="text-xl font-bold text-foreground" style={{ color: "#EC8E00" }}>CANDIDLY</h1>
           </div>
         </div>
       </header>
@@ -71,7 +71,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
               size="lg"
               className="w-full sm:w-auto bg-gradient-primary hover:opacity-90 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
             >
-              <Users className="w-5 h-5 mr-2" />
+              <Users className="w-5 h-5" />
               Join Room
             </Button>
             
@@ -81,7 +81,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
               size="lg"
               className="w-full sm:w-auto border-primary/30 text-primary hover:bg-primary/10 font-semibold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02]"
             >
-              <Plus className="w-5 h-5 mr-2" />
+              <Plus className="w-5 h-5" />
               Create Room
             </Button>
           </div>

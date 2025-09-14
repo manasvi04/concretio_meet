@@ -67,6 +67,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
             <Button
+              id="join-room-button"
               onClick={onJoinRoom}
               size="lg"
               className="w-full sm:w-auto bg-gradient-primary hover:opacity-90 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
@@ -76,6 +77,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
             </Button>
             
             <Button
+              id="create-room-button"
               onClick={onCreateRoom}
               variant="outline"
               size="lg"

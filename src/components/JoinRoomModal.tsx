@@ -164,6 +164,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
               </div>
               
               <Button
+                id="validate-room-button"
                 onClick={validateAndProceed}
                 disabled={!roomUrl || isVerifying || !isValidRoomName(roomUrl)}
                 className="w-full h-12 bg-gradient-primary hover:opacity-90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none"
@@ -232,6 +233,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
               {/* Action Buttons */}
               <div className="flex gap-3">
                 <Button
+                  id="instructions-back-button"
                   onClick={handleBack}
                   variant="outline"
                   className="flex-1 h-12 border-border text-foreground hover:bg-muted rounded-xl transition-all duration-200"
@@ -241,6 +243,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
                 </Button>
                 
                 <Button
+                  id="join-room-confirm-button"
                   onClick={handleJoinCall}
                   disabled={!instructionsAccepted}
                   className="flex-1 h-12 bg-gradient-primary hover:opacity-90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none"

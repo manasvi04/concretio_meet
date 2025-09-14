@@ -205,6 +205,7 @@ const Index = () => {
             <Button
               variant="ghost"
               size="sm"
+              id="back-to-welcome-button"
               onClick={handleBackToWelcome}
               className="mr-2 hover:bg-muted"
             >
@@ -235,6 +236,7 @@ const Index = () => {
               <Button
                 variant={isNotepadOpen ? "default" : "secondary"}
                 size="sm"
+                id="toggle-notepad-button"
                 onClick={() => setIsNotepadOpen(!isNotepadOpen)}
               >
                 <MdCode size={20} color="#fbfbfeff" />
@@ -311,10 +313,11 @@ const Index = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Stay in Meeting</AlertDialogCancel>
+            <AlertDialogCancel id="leave-dialog-stay-button">Stay in Meeting</AlertDialogCancel>
             <AlertDialogAction
               className="bg-red-600 hover:bg-red-700"
               onClick={handleLeaveToWelcome}
+              id="leave-dialog-confirm-button"
             >
               Leave Meeting
             </AlertDialogAction>

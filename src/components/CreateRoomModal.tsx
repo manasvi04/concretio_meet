@@ -309,6 +309,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
 
         <DialogFooter className="px-6 pb-6">
           <Button
+            id="create-room-primary-button"
             onClick={step === "password" ? validatePassword : createNewRoom}
             disabled={isLoading}
             className="w-full h-12 bg-gradient-primary hover:opacity-90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none"

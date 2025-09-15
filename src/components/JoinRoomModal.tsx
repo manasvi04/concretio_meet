@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { verifyRoomExists, isValidRoomName } from "@/utils/dailyApi";
 import { Loader2, Users, ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
 
@@ -26,6 +27,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
   const [verifiedRoomUrl, setVerifiedRoomUrl] = useState("");
   const [instructionsAccepted, setInstructionsAccepted] = useState(false);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const handleClose = () => {
     setStep("roomInput");
@@ -44,6 +46,14 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
   };
 
   const validateAndProceed = async () => {
+    if (isMobile) {
+      toast({
+        variant: "destructive",
+        title: "Unsupported Device",
+        description: "Please join from a laptop or desktop only.",
+      });
+      return;
+    }
     if (!roomUrl.trim()) {
       toast({
         variant: "destructive",

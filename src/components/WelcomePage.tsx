@@ -23,7 +23,8 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom, onOpenAbout }: WelcomePa
               <button
                 type="button"
                 onClick={onOpenAbout}
-                className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                className="underline-offset-4 hover:underline"
+                style={{ color: "#EC8E00" }}
               >
                 About
               </button>
@@ -31,7 +32,8 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom, onOpenAbout }: WelcomePa
                 href="https://www.concret.io/careers"
                 target="_blank"
                 rel="noreferrer noopener"
-                className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                className="underline-offset-4 hover:underline"
+                style={{ color: "#EC8E00" }}
               >
                 Careers
               </a>

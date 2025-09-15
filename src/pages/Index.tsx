@@ -205,7 +205,6 @@ const Index = () => {
         <AboutUsModal
           isOpen={isAboutOpen}
           onClose={() => setIsAboutOpen(false)}
-          onGoHome={handleGoHomeFromAbout}
         />
       </>
     );
@@ -239,7 +238,8 @@ const Index = () => {
             <button
               type="button"
               onClick={() => setIsAboutOpen(true)}
-              className="text-sm text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+              className="text-sm underline-offset-4 hover:underline"
+              style={{ color: "#EC8E00" }}
             >
               About
             </button>
@@ -247,7 +247,8 @@ const Index = () => {
               href="https://www.concret.io/careers"
               target="_blank"
               rel="noreferrer noopener"
-              className="text-sm text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+              className="text-sm underline-offset-4 hover:underline"
+              style={{ color: "#EC8E00" }}
             >
               Careers
             </a>
@@ -362,7 +363,6 @@ const Index = () => {
       <AboutUsModal
         isOpen={isAboutOpen}
         onClose={() => setIsAboutOpen(false)}
-        onGoHome={handleGoHomeFromAbout}
       />
     </div>
   );

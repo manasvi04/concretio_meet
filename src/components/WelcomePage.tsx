@@ -1,21 +1,43 @@
 import { Button } from "@/components/ui/button";
-import { Users, Plus, Video, Shield, Clock, Zap } from "lucide-react";
-import concretioLogo from "@/assets/concretio-logo.png";
+import { Users, Plus, Video, Shield, Zap } from "lucide-react";
+import candidlyLogo from "@/assets/Candidly Logo.png";
 
 interface WelcomePageProps {
   onJoinRoom: () => void;
   onCreateRoom: () => void;
+  onOpenAbout: () => void;
 }
 
-export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
+export const WelcomePage = ({ onJoinRoom, onCreateRoom, onOpenAbout }: WelcomePageProps) => {
   return (
     <div className="min-h-screen bg-gradient-dark flex flex-col">
       {/* Header */}
       <header className="bg-card/50 backdrop-blur-sm border-b border-border px-6 py-4">
         <div className="container mx-auto">
-          <div className="flex items-center gap-3">
-            <img src={concretioLogo} alt="Concret.io" className="h-8" />
-            <h1 className="text-xl font-bold text-foreground" style={{ color: "#EC8E00" }}>CANDIDLY</h1>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <img src={candidlyLogo} alt="Candidly" className="h-8" />
+              <h1 className="text-xl font-bold text-foreground" style={{ color: "#EC8E00" }}>CANDIDLY</h1>
+            </div>
+            <div className="flex items-center gap-4 text-sm">
+              <button
+                type="button"
+                onClick={onOpenAbout}
+                className="underline-offset-4 hover:underline"
+                style={{ color: "#EC8E00" }}
+              >
+                About
+              </button>
+              <a
+                href="https://www.concret.io/careers"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="underline-offset-4 hover:underline"
+                style={{ color: "#EC8E00" }}
+              >
+                Careers
+              </a>
+            </div>
           </div>
         </div>
       </header>
@@ -77,14 +99,14 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
             </Button>
             
             <Button
-              id="create-room-button"
+              id="manage-room-button"
               onClick={onCreateRoom}
               variant="outline"
               size="lg"
               className="w-full sm:w-auto border-primary/30 text-primary hover:bg-primary/10 font-semibold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02]"
             >
               <Plus className="w-5 h-5" />
-              Create Room
+              Manage Room
             </Button>
           </div>
           {/* Removed Quick Stats to keep the hero focused on interviews */}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,8 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { verifyRoomExists, createRoom } from "@/utils/dailyApi";
+import { verifyRoomExists, createRoom, listRooms, updateRoom, RoomListItem } from "@/utils/dailyApi";
 import { Loader2, Plus } from "lucide-react";
 
 interface CreateRoomModalProps {
@@ -26,6 +28,10 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isReschedule, setIsReschedule] = useState(false);
+  const [isFetchingRooms, setIsFetchingRooms] = useState(false);
+  const [rooms, setRooms] = useState<RoomListItem[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<string>("");
   const { toast } = useToast();
 
   const handleClose = () => {
@@ -35,6 +41,10 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
     setDate('');
     setTime('');
     setIsLoading(false);
+    setIsReschedule(false);
+    setIsFetchingRooms(false);
+    setRooms([]);
+    setSelectedRoom("");
     onClose();
   };
 
@@ -102,7 +112,39 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
       }
       return Math.floor(dateInIST.getTime() / 1000);
     };
+    const nowSec = Math.floor(Date.now() / 1000);
 
+    // Reschedule flow
+    if (isReschedule) {
+      if (!selectedRoom) {
+        toast({ variant: "destructive", title: "Select Room", description: "Please select a room to reschedule." });
+        return;
+      }
+      const ts = istToUnixTimestamp(date, time);
+      if (!ts) return; // error toast already shown in helper
+      if (ts <= nowSec) {
+        toast({ variant: "destructive", title: "Must Be Future", description: "Pick a future time for the meeting." });
+        return;
+      }
+      setIsLoading(true);
+      try {
+        const res = await updateRoom(selectedRoom, { properties: { nbf: ts } });
+        if (!res.success) {
+          toast({ variant: "destructive", title: "Reschedule Failed", description: res.error || "Unable to reschedule room." });
+          return;
+        }
+        toast({ title: "Rescheduled 🎉", description: `New start: ${new Date(ts * 1000).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}` });
+        handleClose();
+      } catch (e) {
+        console.error(e);
+        toast({ variant: "destructive", title: "Reschedule Error", description: "Unexpected error while rescheduling." });
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
+    // Create new room flow
     if (!roomName.trim()) {
       toast({
         variant: "destructive",
@@ -138,6 +180,11 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
 
       const nbfTimestamp = istToUnixTimestamp(date, time);
       if (date && time && nbfTimestamp === null) {
+        setIsLoading(false);
+        return;
+      }
+      if (nbfTimestamp && nbfTimestamp <= nowSec) {
+        toast({ variant: "destructive", title: "Must Be Future", description: "Pick a future time for the meeting." });
         setIsLoading(false);
         return;
       }
@@ -194,6 +241,56 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
     }
   };
 
+  // Fetch rooms when reschedule is toggled on
+  useEffect(() => {
+    const fetchRooms = async () => {
+      setIsFetchingRooms(true);
+      try {
+        const res = await listRooms();
+        if (!res.success || !res.rooms) {
+          toast({ variant: "destructive", title: "Failed to Load Rooms", description: res.error || "Please try again." });
+          return;
+        }
+        setRooms(res.rooms);
+      } catch (e) {
+        console.error(e);
+        toast({ variant: "destructive", title: "Failed to Load Rooms", description: "Unexpected error while fetching rooms." });
+      } finally {
+        setIsFetchingRooms(false);
+      }
+    };
+    if (isReschedule) {
+      fetchRooms();
+    }
+  }, [isReschedule, toast]);
+
+  const eligibleRooms = useMemo(() => {
+    const now = Date.now();
+    return rooms.filter(r => {
+      const nbf = (r.config as any)?.nbf as number | undefined;
+      return nbf && nbf * 1000 > now; // future only
+    });
+  }, [rooms]);
+
+  // Prefill date/time from selected room's current nbf (IST)
+  useEffect(() => {
+    if (!isReschedule || !selectedRoom) return;
+    const room = rooms.find(r => r.name === selectedRoom);
+    const nbf = room && (room.config as any)?.nbf as number | undefined;
+    if (!nbf) return;
+    const ms = nbf * 1000;
+    // Show IST in inputs
+    const offsetMin = 330; // IST
+    const ist = new Date(ms + offsetMin * 60 * 1000);
+    const yyyy = ist.getUTCFullYear();
+    const mm = String(ist.getUTCMonth() + 1).padStart(2, '0');
+    const dd = String(ist.getUTCDate()).padStart(2, '0');
+    const HH = String(ist.getUTCHours()).padStart(2, '0');
+    const MM = String(ist.getUTCMinutes()).padStart(2, '0');
+    setDate(`${yyyy}-${mm}-${dd}`);
+    setTime(`${HH}:${MM}`);
+  }, [isReschedule, selectedRoom, rooms]);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !isLoading) {
       if (step === "password") {
@@ -217,7 +314,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
           <DialogDescription className="text-muted-foreground text-base mt-2 text-left pl-12">
             {step === "password"
               ? "Enter the admin password to create a new room."
-              : "Enter details for your new room."
+              : (isReschedule ? "Reschedule an existing room (only future-scheduled rooms are shown)." : "Enter details for your new room.")
             }
           </DialogDescription>
         </DialogHeader>
@@ -243,6 +340,12 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
             </div> 
           ) : (
             <div className="space-y-6">
+              {/* Toggle Reschedule */}
+              <div className="flex items-center gap-3">
+                <Checkbox id="reschedule-toggle" checked={isReschedule} onCheckedChange={(checked) => setIsReschedule(Boolean(checked))} />
+                <Label htmlFor="reschedule-toggle" className="text-sm text-foreground">Reschedule existing room</Label>
+              </div>
+
               {/* Room Name Row */}
               <div className="space-y-2">
                 <Label htmlFor="roomName" className="text-sm font-medium text-foreground">
@@ -254,7 +357,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                   value={roomName}
                   onChange={(e) => setRoomName(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  disabled={isLoading}
+                  disabled={isLoading || isReschedule}
                   className="h-12 text-base rounded-xl bg-input border-2 border-border hover:border-primary/40 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary transition-all duration-200 pl-4 pr-4 placeholder:text-muted-foreground"
                 />
                 <p className="text-xs text-muted-foreground">
@@ -262,10 +365,32 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                 </p>
               </div>
 
+              {/* Eligible Rooms when Rescheduling */}
+              {isReschedule && (
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-foreground">Select a room to reschedule</Label>
+                  <Select onValueChange={setSelectedRoom} value={selectedRoom} disabled={isFetchingRooms || isLoading}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={isFetchingRooms ? "Loading rooms..." : (eligibleRooms.length ? "Choose a room" : "No eligible rooms found")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {eligibleRooms.map((r) => {
+                        const nbf = (r.config as any).nbf as number;
+                        const when = new Date(nbf * 1000).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+                        return (
+                          <SelectItem key={r.id} value={r.name}>{r.name} — current: {when}</SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">Only rooms with a future scheduled time are listed.</p>
+                </div>
+              )}
+
               {/* Date and Time Row */}
               <div className="space-y-3">
                 <Label className="text-sm font-medium text-foreground">
-                  Schedule (Optional)
+                  {isReschedule ? "New schedule" : "Schedule (Optional)"}
                 </Label>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -299,9 +424,11 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                     />
                   </div>
                 </div>
-                <p className="text-xs text-center text-muted-foreground bg-muted/50 rounded-lg p-3">
-                  💡 Leave empty to create an immediate room, or set a future date/time for scheduled access.
-                </p>
+                {!isReschedule && (
+                  <p className="text-xs text-center text-muted-foreground bg-muted/50 rounded-lg p-3">
+                    💡 Leave empty to create an immediate room, or set a future date/time for scheduled access.
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -317,11 +444,11 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
             {isLoading ? (
               <>
                 <Loader2 className="w-5 h-5 mr-3 animate-spin" />
-                {step === "password" ? "Validating..." : "Creating Room..."}
+                {step === "password" ? "Validating..." : (isReschedule ? "Rescheduling..." : "Creating Room...")}
               </>
             ) : (
               <>
-                {step === "password" ? "Validate Password " : "Create Room"}
+                {step === "password" ? "Validate Password " : (isReschedule ? "Reschedule Room" : "Create Room")}
               </>
             )}
           </Button>

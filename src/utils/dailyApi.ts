@@ -10,6 +10,8 @@ export interface RoomInfo {
   config: Record<string, any>;
 }
 
+export interface RoomListItem extends RoomInfo {}
+
 /**
  * Extract room name from various input formats
  */
@@ -92,9 +94,10 @@ export async function verifyRoomExists(roomUrlOrName: string): Promise<{
 
     try {
       const apiKey = getDailyApiKey();
+      const encodedName = encodeURIComponent(roomName);
       
       // Use Daily.co REST API to check if room exists
-      const response = await fetch(`https://api.daily.co/v1/rooms/${roomName}`, {
+      const response = await fetch(`https://api.daily.co/v1/rooms/${encodedName}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${apiKey}`,
@@ -159,6 +162,48 @@ export async function verifyRoomExists(roomUrlOrName: string): Promise<{
       exists: false,
       error: error instanceof Error ? error.message : 'Failed to verify room'
     };
+  }
+}
+
+/**
+ * List Daily.co rooms. Optionally supports pagination params if needed later.
+ */
+export async function listRooms(): Promise<{
+  success: boolean;
+  rooms?: RoomListItem[];
+  error?: string;
+}> {
+  try {
+    const apiKey = getDailyApiKey();
+    const response = await fetch('https://api.daily.co/v1/rooms', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      // Daily returns { total_count, data: [ ...rooms ] }
+      const rooms = (data.data || []).map((room: any) => ({
+        id: room.id,
+        name: room.name,
+        api_created: room.api_created,
+        privacy: room.privacy,
+        url: room.url || createRoomUrl(room.name),
+        created_at: room.created_at,
+        config: room.properties || room.config || {}
+      })) as RoomListItem[];
+
+      return { success: true, rooms };
+    } else {
+      const errorData = await response.json().catch(() => ({}));
+      return { success: false, error: errorData.error || `Failed to list rooms: ${response.status}` };
+    }
+  } catch (error) {
+    console.error('List rooms failed:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to list rooms' };
   }
 }
 
@@ -228,6 +273,113 @@ export async function createRoom(roomName: string, options?: {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to create room'
+    };
+  }
+}
+
+/**
+ * Update an existing Daily.co room (e.g., reschedule by updating properties.nbf)
+ */
+export async function updateRoom(
+  roomName: string,
+  options?: {
+    privacy?: 'private' | 'public';
+    properties?: {
+      max_participants?: number;
+      enable_chat?: boolean;
+      enable_knocking?: boolean;
+      enable_screenshare?: boolean;
+      enable_recording?: 'cloud' | 'local';
+      enable_advanced_chat?: boolean;
+      enable_video_processing_ui?: boolean;
+      enable_live_captions_ui?: boolean;
+      enable_network_ui?: boolean;
+      nbf?: number;
+    };
+  }
+): Promise<{
+  success: boolean;
+  roomInfo?: RoomInfo;
+  error?: string;
+}> {
+  try {
+    const apiKey = getDailyApiKey();
+
+    const requestBody: Record<string, any> = {};
+    if (options?.privacy) requestBody.privacy = options.privacy;
+    if (options?.properties) requestBody.properties = options.properties;
+
+    const response = await fetch(`https://api.daily.co/v1/rooms/${encodeURIComponent(extractRoomName(roomName))}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (response.ok) {
+      const roomData = await response.json();
+      return {
+        success: true,
+        roomInfo: {
+          id: roomData.id || roomName,
+          name: roomData.name || roomName,
+          api_created: roomData.api_created || false,
+          privacy: roomData.privacy || 'public',
+          url: roomData.url || createRoomUrl(extractRoomName(roomName)),
+          created_at: roomData.created_at || new Date().toISOString(),
+          config: roomData.properties || roomData.config || {}
+        }
+      };
+    } else {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        success: false,
+        error: errorData.error || `Failed to update room: ${response.status}`
+      };
+    }
+  } catch (error) {
+    console.error('Room update failed:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to update room'
+    };
+  }
+}
+
+/**
+ * Delete a Daily.co room using the API
+ */
+export async function deleteRoom(roomName: string): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  try {
+    const apiKey = getDailyApiKey();
+    
+    const response = await fetch(`https://api.daily.co/v1/rooms/${encodeURIComponent(extractRoomName(roomName))}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      return { success: true };
+    } else {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        success: false,
+        error: errorData.error || `Failed to delete room: ${response.status}`
+      };
+    }
+  } catch (error) {
+    console.error('Room deletion failed:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to delete room'
     };
   }
 }

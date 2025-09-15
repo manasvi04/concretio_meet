@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { VideoCall } from "@/components/VideoCall";
 import { Notepad } from "@/components/Notepad";
-import { CreateRoomModal } from "@/components/CreateRoomModal";
+import { ManageRoomModal } from "@/components/ManageRoomModal";
 import { WelcomePage } from "@/components/WelcomePage";
+import { AboutUsModal } from "@/components/AboutUsModal";
 import { JoinRoomModal } from "@/components/JoinRoomModal";
 import { useToast } from "@/hooks/use-toast";
 import { createRoomUrl } from "@/utils/dailyApi";
@@ -23,7 +24,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
-import concretioLogo from "@/assets/concretio-logo.png";
+import candidlyLogo from "@/assets/Candidly Logo.png";
 import { MdCode } from "react-icons/md";
 
 type AppState = "welcome" | "meeting";
@@ -40,9 +41,10 @@ const Index = () => {
     uploadRate?: number;
     downloadRate?: number;
   } | null>(null);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   
   // Modal states
-  const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
+  const [isManageRoomModalOpen, setIsManageRoomModalOpen] = useState(false);
   const [isJoinRoomModalOpen, setIsJoinRoomModalOpen] = useState(false);
   
   const { toast } = useToast();
@@ -57,8 +59,9 @@ const Index = () => {
   };
 
   const handleCreateRoom = () => {
-    setIsCreateRoomModalOpen(true);
+    setIsManageRoomModalOpen(true);
   };
+
 
   const handleJoinRoomSuccess = (verifiedRoomUrl: string) => {
     setRoomUrl(verifiedRoomUrl);
@@ -117,6 +120,11 @@ const Index = () => {
     setShowLeaveWarning(false);
   };
 
+  const handleGoHomeFromAbout = () => {
+    setIsAboutOpen(false);
+    setAppState("welcome");
+  };
+
   // Add beforeunload event listener
   useEffect(() => {
     const hasImportantData = () => {
@@ -162,7 +170,7 @@ const Index = () => {
   // Close modals when call is joined
   useEffect(() => {
     if (isJoined) {
-      setIsCreateRoomModalOpen(false);
+      setIsManageRoomModalOpen(false);
       setIsJoinRoomModalOpen(false);
     }
   }, [isJoined]);
@@ -180,6 +188,7 @@ const Index = () => {
         <WelcomePage 
           onJoinRoom={handleJoinRoom}
           onCreateRoom={handleCreateRoom}
+          onOpenAbout={() => setIsAboutOpen(true)}
         />
         
         <JoinRoomModal
@@ -188,9 +197,14 @@ const Index = () => {
           onJoinRoom={handleJoinRoomSuccess}
         />
         
-        <CreateRoomModal
-          isOpen={isCreateRoomModalOpen}
-          onClose={() => setIsCreateRoomModalOpen(false)}
+        <ManageRoomModal
+          isOpen={isManageRoomModalOpen}
+          onClose={() => setIsManageRoomModalOpen(false)}
+        />
+
+        <AboutUsModal
+          isOpen={isAboutOpen}
+          onClose={() => setIsAboutOpen(false)}
         />
       </>
     );
@@ -211,7 +225,7 @@ const Index = () => {
             >
               <ArrowLeft className="w-4 h-4" />
             </Button>
-            <img src={concretioLogo} alt="Concret.io" className="h-8" />
+            <img src={candidlyLogo} alt="Candidly" className="h-8" />
             <h1 
               className="text-xl font-bold text-foreground" 
               style={{ color: "#EC8E00" }}
@@ -220,7 +234,28 @@ const Index = () => {
             </h1>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-4">
+            {!isJoined && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setIsAboutOpen(true)}
+                  className="text-sm underline-offset-4 hover:underline"
+                  style={{ color: "#EC8E00" }}
+                >
+                  About
+                </button>
+                <a
+                  href="https://www.concret.io/careers"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-sm underline-offset-4 hover:underline"
+                  style={{ color: "#EC8E00" }}
+                >
+                  Careers
+                </a>
+              </>
+            )}
             {isJoined && networkStatus && (
               <div className="flex items-center space-x-2 px-3 py-1 bg-muted rounded-md">
                 <div
@@ -251,7 +286,7 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-y-auto">
         <ResizablePanelGroup direction="horizontal" className="flex-1 h-full">
           {/* Video Call Panel */}
           <ResizablePanel defaultSize={isNotepadOpen ? 70 : 100} minSize={30}>
@@ -327,8 +362,13 @@ const Index = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AboutUsModal
+        isOpen={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
+      />
     </div>
   );
-};
+}
 
 export default Index;

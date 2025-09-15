@@ -310,7 +310,7 @@ export async function updateRoom(
     if (options?.properties) requestBody.properties = options.properties;
 
     const response = await fetch(`https://api.daily.co/v1/rooms/${encodeURIComponent(extractRoomName(roomName))}`, {
-      method: 'PATCH',
+      method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',

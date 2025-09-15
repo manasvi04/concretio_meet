@@ -663,25 +663,27 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
                   disabled={isFetchingRooms || isLoading}
                   className="h-10"
                 />
-                <Select 
-                  onValueChange={setSelectedDeleteRoom} 
-                  value={selectedDeleteRoom} 
-                  disabled={isFetchingRooms || isLoading}
-                >
-                  <SelectTrigger className="w-full h-12">
-                    <SelectValue placeholder={
-                      isFetchingRooms ? "Loading rooms..." : 
-                      (filteredDeleteRooms.length ? "Choose a room" : "No rooms found")
-                    } />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filteredDeleteRooms.map((r) => (
-                      <SelectItem key={r.id} value={r.name}>
-                        {r.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {/* Auto-opening dropdown list below that filters as you type */}
+                <div className="border border-border rounded-md bg-popover text-popover-foreground">
+                  <div className="max-h-56 overflow-y-auto">
+                    {isFetchingRooms ? (
+                      <div className="p-3 text-sm text-muted-foreground">Loading rooms...</div>
+                    ) : filteredDeleteRooms.length ? (
+                      filteredDeleteRooms.map((r) => (
+                        <button
+                          type="button"
+                          key={r.id}
+                          onClick={() => setSelectedDeleteRoom(r.name)}
+                          className={`w-full text-left px-3 py-2 text-sm hover:bg-muted ${selectedDeleteRoom === r.name ? 'bg-muted' : ''}`}
+                        >
+                          {r.name}
+                        </button>
+                      ))
+                    ) : (
+                      <div className="p-3 text-sm text-muted-foreground">No rooms found</div>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {selectedDeleteRoom && (

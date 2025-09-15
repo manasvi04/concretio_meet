@@ -188,7 +188,8 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
               <div className="bg-muted/50 rounded-xl p-6 space-y-4">
                 <h3 className="text-lg font-semibold text-foreground mb-4">Meeting Instructions</h3>
                 
-                <div className="space-y-3 text-sm text-muted-foreground">
+                {/* Scrollable instructions list */}
+                <div className="space-y-3 text-sm text-muted-foreground max-h-56 overflow-y-auto pr-1">
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                     <p>Ensure your microphone and camera permissions are enabled for the best experience.</p>
@@ -212,6 +213,16 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                     <p>Be respectful and professional during the meeting. Mute when not speaking.</p>
+                  </div>
+
+                  {/* New instruction points */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <p>This interview is monitored in real time by the AI bot "Strata".</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <p>Any suspicious activity or use of unauthorized tools will lead to immediate termination.</p>
                   </div>
                 </div>
               </div>

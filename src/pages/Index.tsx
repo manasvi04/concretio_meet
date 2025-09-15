@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { VideoCall } from "@/components/VideoCall";
 import { Notepad } from "@/components/Notepad";
-import { CreateRoomModal } from "@/components/CreateRoomModal";
+import { ManageRoomModal } from "@/components/ManageRoomModal";
 import { WelcomePage } from "@/components/WelcomePage";
 import { JoinRoomModal } from "@/components/JoinRoomModal";
 import { useToast } from "@/hooks/use-toast";
@@ -42,7 +42,7 @@ const Index = () => {
   } | null>(null);
   
   // Modal states
-  const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
+  const [isManageRoomModalOpen, setIsManageRoomModalOpen] = useState(false);
   const [isJoinRoomModalOpen, setIsJoinRoomModalOpen] = useState(false);
   
   const { toast } = useToast();
@@ -57,7 +57,7 @@ const Index = () => {
   };
 
   const handleCreateRoom = () => {
-    setIsCreateRoomModalOpen(true);
+    setIsManageRoomModalOpen(true);
   };
 
 
@@ -163,7 +163,7 @@ const Index = () => {
   // Close modals when call is joined
   useEffect(() => {
     if (isJoined) {
-      setIsCreateRoomModalOpen(false);
+      setIsManageRoomModalOpen(false);
       setIsJoinRoomModalOpen(false);
     }
   }, [isJoined]);
@@ -189,9 +189,9 @@ const Index = () => {
           onJoinRoom={handleJoinRoomSuccess}
         />
         
-        <CreateRoomModal
-          isOpen={isCreateRoomModalOpen}
-          onClose={() => setIsCreateRoomModalOpen(false)}
+        <ManageRoomModal
+          isOpen={isManageRoomModalOpen}
+          onClose={() => setIsManageRoomModalOpen(false)}
         />
       </>
     );

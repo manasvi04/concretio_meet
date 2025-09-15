@@ -346,3 +346,39 @@ export async function updateRoom(
     };
   }
 }
+
+/**
+ * Delete a Daily.co room using the API
+ */
+export async function deleteRoom(roomName: string): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  try {
+    const apiKey = getDailyApiKey();
+    
+    const response = await fetch(`https://api.daily.co/v1/rooms/${extractRoomName(roomName)}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      return { success: true };
+    } else {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        success: false,
+        error: errorData.error || `Failed to delete room: ${response.status}`
+      };
+    }
+  } catch (error) {
+    console.error('Room deletion failed:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to delete room'
+    };
+  }
+}

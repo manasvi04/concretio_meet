@@ -77,14 +77,14 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
             </Button>
             
             <Button
-              id="create-room-button"
+              id="manage-room-button"
               onClick={onCreateRoom}
               variant="outline"
               size="lg"
               className="w-full sm:w-auto border-primary/30 text-primary hover:bg-primary/10 font-semibold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02]"
             >
               <Plus className="w-5 h-5" />
-              Create Room
+              Manage Room
             </Button>
           </div>
           {/* Removed Quick Stats to keep the hero focused on interviews */}

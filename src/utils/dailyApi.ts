@@ -94,9 +94,10 @@ export async function verifyRoomExists(roomUrlOrName: string): Promise<{
 
     try {
       const apiKey = getDailyApiKey();
+      const encodedName = encodeURIComponent(roomName);
       
       // Use Daily.co REST API to check if room exists
-      const response = await fetch(`https://api.daily.co/v1/rooms/${roomName}`, {
+      const response = await fetch(`https://api.daily.co/v1/rooms/${encodedName}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${apiKey}`,
@@ -308,7 +309,7 @@ export async function updateRoom(
     if (options?.privacy) requestBody.privacy = options.privacy;
     if (options?.properties) requestBody.properties = options.properties;
 
-    const response = await fetch(`https://api.daily.co/v1/rooms/${extractRoomName(roomName)}`, {
+    const response = await fetch(`https://api.daily.co/v1/rooms/${encodeURIComponent(extractRoomName(roomName))}`, {
       method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -357,7 +358,7 @@ export async function deleteRoom(roomName: string): Promise<{
   try {
     const apiKey = getDailyApiKey();
     
-    const response = await fetch(`https://api.daily.co/v1/rooms/${extractRoomName(roomName)}`, {
+    const response = await fetch(`https://api.daily.co/v1/rooms/${encodeURIComponent(extractRoomName(roomName))}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${apiKey}`,

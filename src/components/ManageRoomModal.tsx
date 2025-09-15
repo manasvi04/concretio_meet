@@ -13,8 +13,6 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { 
   verifyRoomExists, 
   createRoom, 
@@ -41,7 +39,7 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
   const [isFetchingRooms, setIsFetchingRooms] = useState(false);
   const [rooms, setRooms] = useState<RoomListItem[]>([]);
   const [showPassword, setShowPassword] = useState(false);
-  const [deletePickerOpen, setDeletePickerOpen] = useState(false);
+  const [deleteSearch, setDeleteSearch] = useState("");
   
   // Create room fields
   const [roomName, setRoomName] = useState("");
@@ -75,7 +73,7 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
     setSelectedDeleteRoom("");
     setConfirmDeleteName("");
     setShowPassword(false);
-    setDeletePickerOpen(false);
+    setDeleteSearch("");
     onClose();
   };
 
@@ -169,11 +167,14 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
   }, [rooms]);
 
   const allRooms = useMemo(() => {
-    return rooms.map(r => ({
-      name: r.name,
-      id: r.id
-    }));
+    return rooms.map(r => ({ name: r.name, id: r.id }));
   }, [rooms]);
+
+  const filteredDeleteRooms = useMemo(() => {
+    const q = deleteSearch.trim().toLowerCase();
+    if (!q) return allRooms;
+    return allRooms.filter(r => r.name.toLowerCase().includes(q));
+  }, [allRooms, deleteSearch]);
 
   // Prefill reschedule date/time from selected room
   useEffect(() => {
@@ -655,14 +656,32 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
             <div className="space-y-6">
               <div className="space-y-2">
                 <Label className="text-sm font-medium text-foreground">Select Room to Delete</Label>
-                {/* Searchable picker using Popover + Command */}
-                <SearchableRoomPicker
-                  placeholder={isFetchingRooms ? "Loading rooms..." : (allRooms.length ? "Choose a room" : "No rooms found")}
-                  value={selectedDeleteRoom}
-                  onChange={setSelectedDeleteRoom}
-                  options={allRooms.map(r => r.name)}
+                <Input
+                  placeholder="Search rooms..."
+                  value={deleteSearch}
+                  onChange={(e) => setDeleteSearch(e.target.value)}
                   disabled={isFetchingRooms || isLoading}
+                  className="h-10"
                 />
+                <Select 
+                  onValueChange={setSelectedDeleteRoom} 
+                  value={selectedDeleteRoom} 
+                  disabled={isFetchingRooms || isLoading}
+                >
+                  <SelectTrigger className="w-full h-12">
+                    <SelectValue placeholder={
+                      isFetchingRooms ? "Loading rooms..." : 
+                      (filteredDeleteRooms.length ? "Choose a room" : "No rooms found")
+                    } />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {filteredDeleteRooms.map((r) => (
+                      <SelectItem key={r.id} value={r.name}>
+                        {r.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {selectedDeleteRoom && (
@@ -734,51 +753,3 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
     </Dialog>
   );
 };
-
-// Searchable room picker component
-
-interface SearchableRoomPickerProps {
-  value: string;
-  onChange: (val: string) => void;
-  options: string[];
-  placeholder?: string;
-  disabled?: boolean;
-}
-
-function SearchableRoomPicker({ value, onChange, options, placeholder, disabled }: SearchableRoomPickerProps) {
-  const [open, setOpen] = useState(false);
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          type="button"
-          variant="outline"
-          disabled={disabled}
-          className="w-full justify-between h-12"
-        >
-          <span className="truncate mr-2">{value || placeholder || "Choose a room"}</span>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="p-0 w-[var(--radix-popover-trigger-width)]">
-        <Command>
-          <CommandInput placeholder="Search rooms..." />
-          <CommandEmpty>No rooms found.</CommandEmpty>
-          <CommandGroup>
-            {options.map((opt) => (
-              <CommandItem
-                key={opt}
-                value={opt}
-                onSelect={(val) => {
-                  onChange(val);
-                  setOpen(false);
-                }}
-              >
-                {opt}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-}

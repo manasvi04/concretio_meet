@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Users, Plus, Video, Shield, Clock, Zap } from "lucide-react";
+import { Users, Plus, Video, Shield, Zap } from "lucide-react";
 import concretioLogo from "@/assets/concretio-logo.png";
 
 interface WelcomePageProps {

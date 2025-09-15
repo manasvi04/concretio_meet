@@ -60,6 +60,7 @@ const Index = () => {
     setIsCreateRoomModalOpen(true);
   };
 
+
   const handleJoinRoomSuccess = (verifiedRoomUrl: string) => {
     setRoomUrl(verifiedRoomUrl);
     setAppState("meeting");

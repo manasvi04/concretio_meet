@@ -283,7 +283,7 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-y-auto">
         <ResizablePanelGroup direction="horizontal" className="flex-1 h-full">
           {/* Video Call Panel */}
           <ResizablePanel defaultSize={isNotepadOpen ? 70 : 100} minSize={30}>

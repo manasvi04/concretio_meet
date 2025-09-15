@@ -235,24 +235,27 @@ const Index = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button
-              type="button"
-              onClick={() => setIsAboutOpen(true)}
-              className="text-sm underline-offset-4 hover:underline"
-              style={{ color: "#EC8E00" }}
-            >
-              About
-            </button>
-            <a
-              href="https://www.concret.io/careers"
-              target="_blank"
-              rel="noreferrer noopener"
-              className="text-sm underline-offset-4 hover:underline"
-              style={{ color: "#EC8E00" }}
-            >
-              Careers
-            </a>
-            <div className="h-5 w-px bg-border" />
+            {!isJoined && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setIsAboutOpen(true)}
+                  className="text-sm underline-offset-4 hover:underline"
+                  style={{ color: "#EC8E00" }}
+                >
+                  About
+                </button>
+                <a
+                  href="https://www.concret.io/careers"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-sm underline-offset-4 hover:underline"
+                  style={{ color: "#EC8E00" }}
+                >
+                  Careers
+                </a>
+              </>
+            )}
             {isJoined && networkStatus && (
               <div className="flex items-center space-x-2 px-3 py-1 bg-muted rounded-md">
                 <div

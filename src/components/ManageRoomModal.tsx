@@ -40,6 +40,8 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
   const [rooms, setRooms] = useState<RoomListItem[]>([]);
   const [showPassword, setShowPassword] = useState(false);
   const [deleteSearch, setDeleteSearch] = useState("");
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteHighlight, setDeleteHighlight] = useState<number>(-1);
   
   // Create room fields
   const [roomName, setRoomName] = useState("");
@@ -74,6 +76,8 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
     setConfirmDeleteName("");
     setShowPassword(false);
     setDeleteSearch("");
+    setDeleteOpen(false);
+    setDeleteHighlight(-1);
     onClose();
   };
 
@@ -656,33 +660,69 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
             <div className="space-y-6">
               <div className="space-y-2">
                 <Label className="text-sm font-medium text-foreground">Select Room to Delete</Label>
-                <Input
-                  placeholder="Search rooms..."
-                  value={deleteSearch}
-                  onChange={(e) => setDeleteSearch(e.target.value)}
-                  disabled={isFetchingRooms || isLoading}
-                  className="h-10"
-                />
-                {/* Auto-opening dropdown list below that filters as you type */}
-                <div className="border border-border rounded-md bg-popover text-popover-foreground">
-                  <div className="max-h-56 overflow-y-auto">
-                    {isFetchingRooms ? (
-                      <div className="p-3 text-sm text-muted-foreground">Loading rooms...</div>
-                    ) : filteredDeleteRooms.length ? (
-                      filteredDeleteRooms.map((r) => (
-                        <button
-                          type="button"
-                          key={r.id}
-                          onClick={() => setSelectedDeleteRoom(r.name)}
-                          className={`w-full text-left px-3 py-2 text-sm hover:bg-muted ${selectedDeleteRoom === r.name ? 'bg-muted' : ''}`}
-                        >
-                          {r.name}
-                        </button>
-                      ))
-                    ) : (
-                      <div className="p-3 text-sm text-muted-foreground">No rooms found</div>
-                    )}
-                  </div>
+                <div className="relative">
+                  <Input
+                    placeholder="Search rooms..."
+                    value={deleteSearch}
+                    onChange={(e) => {
+                      setDeleteSearch(e.target.value);
+                      setDeleteOpen(true);
+                      setDeleteHighlight(0);
+                    }}
+                    onFocus={() => setDeleteOpen(true)}
+                    onBlur={() => setTimeout(() => setDeleteOpen(false), 150)}
+                    onKeyDown={(e) => {
+                      if (!deleteOpen) return;
+                      if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        setDeleteHighlight((idx) => Math.min(idx + 1, Math.max(filteredDeleteRooms.length - 1, 0)));
+                      } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        setDeleteHighlight((idx) => Math.max(idx - 1, 0));
+                      } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const opt = filteredDeleteRooms[deleteHighlight] || filteredDeleteRooms[0];
+                        if (opt) {
+                          setSelectedDeleteRoom(opt.name);
+                          setDeleteSearch(opt.name);
+                          setDeleteOpen(false);
+                        }
+                      } else if (e.key === 'Escape') {
+                        setDeleteOpen(false);
+                      }
+                    }}
+                    disabled={isFetchingRooms || isLoading}
+                    className="h-12"
+                  />
+                  {deleteOpen && (
+                    <div className="absolute z-50 mt-1 w-full border border-border rounded-md bg-popover text-popover-foreground shadow-lg">
+                      <div className="max-h-56 overflow-y-auto">
+                        {isFetchingRooms ? (
+                          <div className="p-3 text-sm text-muted-foreground">Loading rooms...</div>
+                        ) : filteredDeleteRooms.length ? (
+                          filteredDeleteRooms.map((r, i) => (
+                            <button
+                              type="button"
+                              key={r.id}
+                              onMouseDown={(ev) => ev.preventDefault()}
+                              onClick={() => {
+                                setSelectedDeleteRoom(r.name);
+                                setDeleteSearch(r.name);
+                                setDeleteOpen(false);
+                              }}
+                              className={`w-full text-left px-3 py-2 text-sm hover:bg-muted ${
+                                (deleteHighlight === i || selectedDeleteRoom === r.name) ? 'bg-muted' : ''
+                              }`}
+                            >
+                              {r.name}
+                            </button>
+                          ))
+                        ) : (
+                          <div className="p-3 text-sm text-muted-foreground">No rooms found</div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

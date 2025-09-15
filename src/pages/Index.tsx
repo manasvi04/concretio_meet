@@ -23,7 +23,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
-import concretioLogo from "@/assets/concretio-logo.png";
+import candidlyLogo from "@/assets/Candidly Logo.png";
 import { MdCode } from "react-icons/md";
 
 type AppState = "welcome" | "meeting";
@@ -212,7 +212,7 @@ const Index = () => {
             >
               <ArrowLeft className="w-4 h-4" />
             </Button>
-            <img src={concretioLogo} alt="Concret.io" className="h-8" />
+            <img src={candidlyLogo} alt="Candidly" className="h-8" />
             <h1 
               className="text-xl font-bold text-foreground" 
               style={{ color: "#EC8E00" }}

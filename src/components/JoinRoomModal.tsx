@@ -66,7 +66,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
 
     try {
       const verification = await verifyRoomExists(roomUrl);
-      
+
       if (!verification.exists) {
         setIsVerifying(false);
         toast({
@@ -79,7 +79,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
 
       const fullRoomUrl = verification.roomInfo?.url || `https://concretio.daily.co/${roomUrl}`;
       setVerifiedRoomUrl(fullRoomUrl);
-      
+
       toast({
         title: "Room Verified ✅",
         description: `Room "${verification.roomInfo?.name}" found! Proceeding to instructions...`,
@@ -162,7 +162,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
                   </p>
                 )}
               </div>
-              
+
               <Button
                 id="validate-room-button"
                 onClick={validateAndProceed}
@@ -187,43 +187,44 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
               {/* Instructions */}
               <div className="bg-muted/50 rounded-xl p-6 space-y-4">
                 <h3 className="text-lg font-semibold text-foreground mb-4">Meeting Instructions</h3>
-                
+
                 {/* Scrollable instructions list */}
                 <div className="space-y-3 text-sm text-muted-foreground max-h-56 overflow-y-auto pr-1">
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <p>This interview is proctored in real time by the AI bot "Strata".</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                    <p>Any suspicious activity or use of unauthorized tools will lead to immediate termination.</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                     <p>Ensure your microphone and camera permissions are enabled for the best experience.</p>
                   </div>
-                  
+
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                     <p>Use headphones to prevent echo and improve audio quality for all participants.</p>
                   </div>
-                  
+
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                     <p>Find a quiet, well-lit environment for optimal video and audio quality.</p>
                   </div>
-                  
+
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                     <p>The integrated code editor allows real-time collaboration during the meeting.</p>
                   </div>
-                  
+
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                     <p>Be respectful and professional during the meeting. Mute when not speaking.</p>
                   </div>
 
                   {/* New instruction points */}
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                    <p>This interview is monitored in real time by the AI bot "Strata".</p>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                    <p>Any suspicious activity or use of unauthorized tools will lead to immediate termination.</p>
-                  </div>
+
                 </div>
               </div>
 
@@ -252,7 +253,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
                   <ArrowLeft className="w-5 h-5 mr-2" />
                   Back
                 </Button>
-                
+
                 <Button
                   id="join-room-confirm-button"
                   onClick={handleJoinCall}

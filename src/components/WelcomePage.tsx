@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Users, Plus, Video, Shield, Zap } from "lucide-react";
-import concretioLogo from "@/assets/concretio-logo.png";
+import candidlyLogo from "@/assets/Candidly Logo.png";
 
 interface WelcomePageProps {
   onJoinRoom: () => void;
@@ -14,7 +14,7 @@ export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
       <header className="bg-card/50 backdrop-blur-sm border-b border-border px-6 py-4">
         <div className="container mx-auto">
           <div className="flex items-center gap-3">
-            <img src={concretioLogo} alt="Concret.io" className="h-8" />
+            <img src={candidlyLogo} alt="Candidly" className="h-8" />
             <h1 className="text-xl font-bold text-foreground" style={{ color: "#EC8E00" }}>CANDIDLY</h1>
           </div>
         </div>

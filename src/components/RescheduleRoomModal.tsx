@@ -94,11 +94,7 @@ export const RescheduleRoomModal = ({ isOpen, onClose }: RescheduleRoomModalProp
 
       setVerifiedRoomName(name);
       setCurrentNbf(nbf ?? null);
-      if (nbf && isFuture(nbf)) {
-        toast({ title: "Room Verified ✅", description: `Current start: ${new Date(nbf * 1000).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}` });
-      } else {
-        toast({ title: "Room Verified ✅", description: "No current schedule found. You can set a new start time." });
-      }
+      toast({ title: "Room Verified ✅", description: "You can set a new start time for this room." });
       setStep("selectTime");
     } catch (e) {
       console.error(e);
@@ -190,11 +186,6 @@ export const RescheduleRoomModal = ({ isOpen, onClose }: RescheduleRoomModalProp
 
           {step === "selectTime" && (
             <div className="space-y-6">
-              {currentNbf && (
-                <p className="text-xs text-center text-muted-foreground bg-muted/50 rounded-lg p-3">
-                  Current start (IST): {new Date(currentNbf * 1000).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
-                </p>
-              )}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="date" className="text-xs text-muted-foreground">Date (IST)</Label>

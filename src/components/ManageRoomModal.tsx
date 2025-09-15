@@ -13,6 +13,8 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { 
   verifyRoomExists, 
   createRoom, 
@@ -22,7 +24,7 @@ import {
   RoomListItem,
   extractRoomName 
 } from "@/utils/dailyApi";
-import { Loader2, Settings, Trash2, CalendarClock, Plus } from "lucide-react";
+import { Loader2, Settings, Trash2, CalendarClock, Plus, ArrowLeft, Eye, EyeOff } from "lucide-react";
 
 interface ManageRoomModalProps {
   isOpen: boolean;
@@ -38,6 +40,8 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingRooms, setIsFetchingRooms] = useState(false);
   const [rooms, setRooms] = useState<RoomListItem[]>([]);
+  const [showPassword, setShowPassword] = useState(false);
+  const [deletePickerOpen, setDeletePickerOpen] = useState(false);
   
   // Create room fields
   const [roomName, setRoomName] = useState("");
@@ -70,6 +74,8 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
     setRescheduleTime("");
     setSelectedDeleteRoom("");
     setConfirmDeleteName("");
+    setShowPassword(false);
+    setDeletePickerOpen(false);
     onClose();
   };
 
@@ -460,16 +466,26 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
         <div className="px-6 pb-6">
           {step === "password" && (
             <div className="space-y-4">
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter admin password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={isLoading}
-                className="h-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-0 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter admin password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  disabled={isLoading}
+                  className="h-12 pr-12 text-base rounded-xl bg-input border-2 border-border focus-visible:ring-0 focus-visible:ring-primary focus-visible:border-primary transition-all duration-200"
+                />
+                <button
+                  type="button"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute inset-y-0 right-3 my-auto h-8 w-8 flex items-center justify-center text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
             </div>
           )}
 
@@ -589,15 +605,11 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
                     } />
                   </SelectTrigger>
                   <SelectContent>
-                    {futureRooms.map((r) => {
-                      const nbf = (r.config as any).nbf as number;
-                      const when = new Date(nbf * 1000).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-                      return (
-                        <SelectItem key={r.id} value={r.name}>
-                          {r.name} — current: {when}
-                        </SelectItem>
-                      );
-                    })}
+                    {futureRooms.map((r) => (
+                      <SelectItem key={r.id} value={r.name}>
+                        {r.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">Only rooms with a future scheduled time are listed.</p>
@@ -643,25 +655,14 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
             <div className="space-y-6">
               <div className="space-y-2">
                 <Label className="text-sm font-medium text-foreground">Select Room to Delete</Label>
-                <Select 
-                  onValueChange={setSelectedDeleteRoom} 
-                  value={selectedDeleteRoom} 
+                {/* Searchable picker using Popover + Command */}
+                <SearchableRoomPicker
+                  placeholder={isFetchingRooms ? "Loading rooms..." : (allRooms.length ? "Choose a room" : "No rooms found")}
+                  value={selectedDeleteRoom}
+                  onChange={setSelectedDeleteRoom}
+                  options={allRooms.map(r => r.name)}
                   disabled={isFetchingRooms || isLoading}
-                >
-                  <SelectTrigger className="w-full h-12">
-                    <SelectValue placeholder={
-                      isFetchingRooms ? "Loading rooms..." : 
-                      (allRooms.length ? "Choose a room" : "No rooms found")
-                    } />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {allRooms.map((r) => (
-                      <SelectItem key={r.id} value={r.name}>
-                        {r.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                />
               </div>
 
               {selectedDeleteRoom && (
@@ -688,36 +689,96 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
         </div>
 
         <DialogFooter className="px-6 pb-6">
-          <Button
-            onClick={
-              step === "password" ? validatePassword : 
-              step === "action" ? handleActionSelect : 
-              handleSubmit
-            }
-            disabled={isLoading}
-            className="w-full h-12 bg-gradient-primary hover:opacity-90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-3 animate-spin" />
-                {step === "password" ? "Validating..." : 
-                 step === "action" ? "Loading..." :
-                 selectedAction === "create" ? "Creating..." :
-                 selectedAction === "reschedule" ? "Rescheduling..." :
-                 "Deleting..."}
-              </>
-            ) : (
-              <>
-                {step === "password" ? "Validate Password" : 
-                 step === "action" ? "Continue" :
-                 selectedAction === "create" ? "Create Room" :
-                 selectedAction === "reschedule" ? "Reschedule Room" :
-                 "Delete Room"}
-              </>
+          <div className="flex w-full gap-3">
+            {step === "details" && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setStep("action")}
+                className="h-12 flex-1 border-border text-foreground hover:bg-muted rounded-xl"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" /> Back
+              </Button>
             )}
-          </Button>
+            <Button
+              onClick={
+                step === "password" ? validatePassword : 
+                step === "action" ? handleActionSelect : 
+                handleSubmit
+              }
+              disabled={isLoading}
+              className="h-12 flex-1 bg-gradient-primary hover:opacity-90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-3 animate-spin" />
+                  {step === "password" ? "Validating..." : 
+                   step === "action" ? "Loading..." :
+                   selectedAction === "create" ? "Creating..." :
+                   selectedAction === "reschedule" ? "Rescheduling..." :
+                   "Deleting..."}
+                </>
+              ) : (
+                <>
+                  {step === "password" ? "Validate Password" : 
+                   step === "action" ? "Continue" :
+                   selectedAction === "create" ? "Create Room" :
+                   selectedAction === "reschedule" ? "Reschedule Room" :
+                   "Delete Room"}
+                </>
+              )}
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 };
+
+// Searchable room picker component
+
+interface SearchableRoomPickerProps {
+  value: string;
+  onChange: (val: string) => void;
+  options: string[];
+  placeholder?: string;
+  disabled?: boolean;
+}
+
+function SearchableRoomPicker({ value, onChange, options, placeholder, disabled }: SearchableRoomPickerProps) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={disabled}
+          className="w-full justify-between h-12"
+        >
+          <span className="truncate mr-2">{value || placeholder || "Choose a room"}</span>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="p-0 w-[var(--radix-popover-trigger-width)]">
+        <Command>
+          <CommandInput placeholder="Search rooms..." />
+          <CommandEmpty>No rooms found.</CommandEmpty>
+          <CommandGroup>
+            {options.map((opt) => (
+              <CommandItem
+                key={opt}
+                value={opt}
+                onSelect={(val) => {
+                  onChange(val);
+                  setOpen(false);
+                }}
+              >
+                {opt}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}

@@ -5,17 +5,37 @@ import candidlyLogo from "@/assets/Candidly Logo.png";
 interface WelcomePageProps {
   onJoinRoom: () => void;
   onCreateRoom: () => void;
+  onOpenAbout: () => void;
 }
 
-export const WelcomePage = ({ onJoinRoom, onCreateRoom }: WelcomePageProps) => {
+export const WelcomePage = ({ onJoinRoom, onCreateRoom, onOpenAbout }: WelcomePageProps) => {
   return (
     <div className="min-h-screen bg-gradient-dark flex flex-col">
       {/* Header */}
       <header className="bg-card/50 backdrop-blur-sm border-b border-border px-6 py-4">
         <div className="container mx-auto">
-          <div className="flex items-center gap-3">
-            <img src={candidlyLogo} alt="Candidly" className="h-8" />
-            <h1 className="text-xl font-bold text-foreground" style={{ color: "#EC8E00" }}>CANDIDLY</h1>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <img src={candidlyLogo} alt="Candidly" className="h-8" />
+              <h1 className="text-xl font-bold text-foreground" style={{ color: "#EC8E00" }}>CANDIDLY</h1>
+            </div>
+            <div className="flex items-center gap-4 text-sm">
+              <button
+                type="button"
+                onClick={onOpenAbout}
+                className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+              >
+                About
+              </button>
+              <a
+                href="https://www.concret.io/careers"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+              >
+                Careers
+              </a>
+            </div>
           </div>
         </div>
       </header>

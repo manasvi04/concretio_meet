@@ -186,7 +186,7 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
             <div className="space-y-6">
               {/* Instructions */}
               <div className="bg-muted/50 rounded-xl p-6 space-y-4">
-                <h3 className="text-lg font-semibold text-foreground mb-4">Meeting Instructions</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-4">Interview Instructions</h3>
 
                 {/* Scrollable instructions list */}
                 <div className="space-y-3 text-sm text-muted-foreground max-h-56 overflow-y-auto pr-1">
@@ -215,12 +215,12 @@ export const JoinRoomModal = ({ isOpen, onClose, onJoinRoom }: JoinRoomModalProp
 
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                    <p>The integrated code editor allows real-time collaboration during the meeting.</p>
+                    <p>Only use integrated code editor for real-time collaboration during the interview.</p>
                   </div>
 
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                    <p>Be respectful and professional during the meeting. Mute when not speaking.</p>
+                    <p>Be respectful and professional during the interview. Mute when not speaking.</p>
                   </div>
 
                   {/* New instruction points */}

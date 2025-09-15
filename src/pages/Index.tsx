@@ -4,6 +4,7 @@ import { VideoCall } from "@/components/VideoCall";
 import { Notepad } from "@/components/Notepad";
 import { ManageRoomModal } from "@/components/ManageRoomModal";
 import { WelcomePage } from "@/components/WelcomePage";
+import { AboutUsModal } from "@/components/AboutUsModal";
 import { JoinRoomModal } from "@/components/JoinRoomModal";
 import { useToast } from "@/hooks/use-toast";
 import { createRoomUrl } from "@/utils/dailyApi";
@@ -40,6 +41,7 @@ const Index = () => {
     uploadRate?: number;
     downloadRate?: number;
   } | null>(null);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   
   // Modal states
   const [isManageRoomModalOpen, setIsManageRoomModalOpen] = useState(false);
@@ -118,6 +120,11 @@ const Index = () => {
     setShowLeaveWarning(false);
   };
 
+  const handleGoHomeFromAbout = () => {
+    setIsAboutOpen(false);
+    setAppState("welcome");
+  };
+
   // Add beforeunload event listener
   useEffect(() => {
     const hasImportantData = () => {
@@ -181,6 +188,7 @@ const Index = () => {
         <WelcomePage 
           onJoinRoom={handleJoinRoom}
           onCreateRoom={handleCreateRoom}
+          onOpenAbout={() => setIsAboutOpen(true)}
         />
         
         <JoinRoomModal
@@ -192,6 +200,12 @@ const Index = () => {
         <ManageRoomModal
           isOpen={isManageRoomModalOpen}
           onClose={() => setIsManageRoomModalOpen(false)}
+        />
+
+        <AboutUsModal
+          isOpen={isAboutOpen}
+          onClose={() => setIsAboutOpen(false)}
+          onGoHome={handleGoHomeFromAbout}
         />
       </>
     );
@@ -221,7 +235,23 @@ const Index = () => {
             </h1>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-4">
+            <button
+              type="button"
+              onClick={() => setIsAboutOpen(true)}
+              className="text-sm text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+            >
+              About
+            </button>
+            <a
+              href="https://www.concret.io/careers"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-sm text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+            >
+              Careers
+            </a>
+            <div className="h-5 w-px bg-border" />
             {isJoined && networkStatus && (
               <div className="flex items-center space-x-2 px-3 py-1 bg-muted rounded-md">
                 <div
@@ -328,8 +358,14 @@ const Index = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AboutUsModal
+        isOpen={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
+        onGoHome={handleGoHomeFromAbout}
+      />
     </div>
   );
-};
+}
 
 export default Index;

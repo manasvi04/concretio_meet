@@ -246,6 +246,17 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
     setIsLoading(true);
 
     try {
+      // Require schedule date/time
+      if (!date || !time) {
+        toast({
+          variant: "destructive",
+          title: "Schedule Required",
+          description: "Please select both date and time for the interview.",
+        });
+        setIsLoading(false);
+        return;
+      }
+
       const verification = await verifyRoomExists(roomName);
       if (verification.exists) {
         toast({
@@ -259,11 +270,11 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
 
       const nowSec = Math.floor(Date.now() / 1000);
       const nbfTimestamp = istToUnixTimestamp(date, time);
-      if (date && time && nbfTimestamp === null) {
+      if (nbfTimestamp === null) {
         setIsLoading(false);
         return;
       }
-      if (nbfTimestamp && nbfTimestamp <= nowSec) {
+      if (nbfTimestamp <= nowSec) {
         toast({ 
           variant: "destructive", 
           title: "Must Be Future", 
@@ -285,7 +296,7 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
           enable_video_processing_ui: false,
           enable_live_captions_ui: false,
           enable_network_ui: true,
-          ...(nbfTimestamp && { nbf: nbfTimestamp }),
+          nbf: nbfTimestamp,
         }
       });
 
@@ -555,7 +566,7 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
 
               <div className="space-y-3">
                 <Label className="text-sm font-medium text-foreground">
-                  Schedule (Optional)
+                  Schedule (Required)
                 </Label>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -588,7 +599,7 @@ export const ManageRoomModal = ({ isOpen, onClose }: ManageRoomModalProps) => {
                   </div>
                 </div>
                 <p className="text-xs text-center text-muted-foreground bg-muted/50 rounded-lg p-3">
-                  💡 Leave empty to create an immediate room, or set a future date/time for scheduled access.
+                  Please choose a future date and time. Scheduling is mandatory.
                 </p>
               </div>
             </div>
